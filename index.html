@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoStay - Student Climate Action Rwanda</title>
+  <meta name="description" content="EcoStay Club is Rwanda's leading student network dedicated to biodiversity, campus reforestation, and community-led environmental resilience. Join us in greening our campuses.">
+  <meta name="keywords" content="EcoStay, Rwanda, Climate Action, Student Club, Reforestation, Biodiversity, University of Rwanda, Sustainability">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2d5a27">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ecostay.rw/">
+  <meta property="og:title" content="EcoStay - Student Climate Action Rwanda">
+  <meta property="og:description" content="Join Rwanda's student movement for climate resilience and campus reforestation.">
+  <meta property="og:image" content="img/ecostay-logo.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="EcoStay - Student Climate Action Rwanda">
+  <meta property="twitter:description" content="Join Rwanda's student movement for climate resilience and campus reforestation.">
+  <meta property="twitter:image" content="img/ecostay-logo.png">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="styles.css">
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script type="text/javascript">
+    (function(){
+       // Initialize EmailJS with your public key
+       emailjs.init("user_1234567890abcdef"); 
+    })();
+  </script>
+</head>
+<body style="display: none;"> <!-- Hidden until checkLogin decides what to show -->
+
+<div id="toast-container"></div>
+
+<!-- AUTH LANDING PAGE (First thing users see) -->
+<div id="auth-landing" style="display: none;">
+  <div class="auth-landing-content">
+    <div class="auth-landing-logo">
+      <div class="logo-row">
+        <img src="img/ecostay-logo.png" alt="EcoStay Club">
+        <div class="lang-switch-desktop">
+            <span onclick="setLanguage('en')" class="lang-opt">EN</span> | 
+            <span onclick="setLanguage('fr')" class="lang-opt">FR</span> | 
+            <span onclick="setLanguage('rw')" class="lang-opt">RW</span>
+        </div>
+      </div>
+      <h1 data-lang="hero_title">EcoStay Student for Climate Action</h1>
+    </div>
+    
+    <div class="auth-landing-card">
+      <div class="auth-header">
+        <button class="tab-btn active" onclick="switchTab('login', true)" data-lang="tab_login">Login</button>
+        <button class="tab-btn" onclick="switchTab('register', true)" data-lang="tab_register">Register</button>
+      </div>
+      
+      <div class="modal-body">
+        <form id="landingLoginForm" class="auth-form">
+          <div class="input-group">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" id="landEmail" required placeholder=" " />
+            <label data-lang="label_email">Email</label>
+          </div>
+          <div class="input-group">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" id="landPass" required placeholder=" " />
+            <label data-lang="label_pass">Password</label>
+            <i class="fa-solid fa-eye toggle-password" onclick="togglePasswordVisibility('landPass', this)"></i>
+          </div>
+          <button type="submit" class="btn primary full-width" data-lang="btn_login">Login</button>
+        </form>
+        
+        <form id="landingRegisterForm" class="auth-form" style="display:none;">
+          <div class="input-group">
+            <i class="fa-solid fa-user"></i>
+            <input type="text" id="landRegName" required placeholder=" " />
+            <label data-lang="label_name">Full Name</label>
+          </div>
+          <div class="input-group">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" id="landRegEmail" required placeholder=" " />
+            <label data-lang="label_email">Email</label>
+          </div>
+          <div class="input-group">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" id="landRegPass" required placeholder=" " />
+            <label data-lang="label_pass">Password</label>
+            <i class="fa-solid fa-eye toggle-password" onclick="togglePasswordVisibility('landRegPass', this)"></i>
+          </div>
+          <div class="input-group">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" id="landRegConfirmPass" required placeholder=" " />
+            <label data-lang="label_confirm_pass">Confirm Password</label>
+            <i class="fa-solid fa-eye toggle-password" onclick="togglePasswordVisibility('landRegConfirmPass', this)"></i>
+          </div>
+          <button type="submit" class="btn primary full-width" data-lang="btn_create_acc">Create Account</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN SITE WRAPPER (Hidden until login) -->
+<div id="main-content" style="display: none;">
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="logo">
+    <!-- Ensure filename matches EXACTLY on GitHub (case-sensitive) -->
+    <img src="img/ecostay-logo.png" alt="EcoStay Club" class="logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+    <!-- Fallback Text if Image Fails -->
+    <span style="display:none; font-family:'Playfair Display', serif; font-size:1.5rem; font-weight:700; color:var(--primary);">EcoStay</span>
+  </div>
+
+  <div class="hamburger" onclick="toggleMobileMenu()">
+    <i class="fa-solid fa-bars"></i>
+  </div>
+
+  <nav class="nav-links" id="navLinks">
+    <a href="#home" onclick="closeMobileMenu()" data-lang="nav_home">Home</a>
+    
+    <div class="dropdown">
+      <span class="dropbtn"><span data-lang="nav_about">About Us</span> <i class="fa-solid fa-chevron-down"></i></span>
+      <div class="dropdown-content">
+        <a href="#mission" onclick="closeMobileMenu()" data-lang="nav_mission">Mission & Vision</a>
+        <a href="#history" onclick="closeMobileMenu()" data-lang="nav_history">Our History</a>
+        
+        <!-- FIXED LINK TARGET -->
+        <a href="#who" onclick="closeMobileMenu()" data-lang="nav_who">Who We Are</a>
+        
+        <a href="#testimonials" onclick="closeMobileMenu()" data-lang="nav_testimonials">Testimonials</a>
+        <a href="#donate" onclick="closeMobileMenu()" data-lang="nav_donate">Donate</a>
+      </div>
+    </div>
+    
+    <a href="#events-section" onclick="closeMobileMenu()" data-lang="nav_events">Events</a>
+    <a href="#team" onclick="closeMobileMenu()" data-lang="nav_team">Team</a>
+    <a href="#contact" onclick="closeMobileMenu()" data-lang="nav_contact">Contact</a>
+
+    <!-- MOBILE MENU FOOTER -->
+    <div class="mobile-menu-footer">
+      <div class="mobile-divider"></div>
+      
+      <div class="mobile-lang-switch">
+          <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+          <button class="lang-btn" onclick="setLanguage('fr')">FR</button>
+          <button class="lang-btn" onclick="setLanguage('rw')">RW</button>
+      </div>
+
+      <button class="mobile-opt-btn" onclick="toggleTheme()">
+        <i class="fa-solid fa-moon"></i> <span id="mobileThemeText" data-lang="btn_darkmode">Dark Mode</span>
+      </button>
+
+      <div id="mobile-guest">
+        <button class="btn primary full-width" style="margin-top: 15px;" onclick="openModal('authModal')" data-lang="btn_login_signup">Login / Sign Up</button>
+      </div>
+
+      <div id="mobile-user" style="display: none;">
+        <div class="mobile-user-card">
+          <img id="mobile-avatar" src="" alt="Avatar">
+          <div class="mobile-user-details">
+            <h4 id="mobile-name">User Name</h4>
+            <p id="mobile-email">user@email.com</p>
+          </div>
+        </div>
+        <div class="mobile-user-actions">
+          <button class="mobile-opt-btn" onclick="openEditProfile()">
+            <i class="fa-solid fa-user-pen"></i> <span data-lang="btn_edit_profile">Edit Profile</span>
+          </button>
+          <button class="mobile-opt-btn text-danger" onclick="logout()">
+            <i class="fa-solid fa-right-from-bracket"></i> <span data-lang="btn_logout">Logout</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- DESKTOP ACTIONS -->
+  <div class="nav-actions desktop-actions">
+    <div class="lang-switch-desktop">
+        <span onclick="setLanguage('en')" class="lang-opt active-lang">EN</span> | 
+        <span onclick="setLanguage('fr')" class="lang-opt">FR</span> | 
+        <span onclick="setLanguage('rw')" class="lang-opt">RW</span>
+    </div>
+
+    <div id="guest-actions">
+      <button class="icon-btn" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i></button>
+      <button class="btn primary" style="padding: 10px 24px;" onclick="openModal('authModal')" data-lang="btn_login">Login</button>
+    </div>
+
+    <div id="user-actions" style="display: none;">
+      <div class="user-dropdown">
+        <button class="user-btn">
+          <div class="avatar-container">
+            <img id="nav-avatar" src="" alt="Avatar">
+            <div class="status-dot"></div>
+          </div>
+          <span id="nav-name">User</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="user-dropdown-content">
+          <div class="dropdown-header">
+            <h4 id="menu-name">User Name</h4>
+            <p id="menu-email">user@email.com</p>
+          </div>
+          <button class="user-menu-item" onclick="openEditProfile()"><i class="fa-solid fa-user-pen"></i> <span data-lang="btn_edit_profile">Edit Profile</span></button>
+          <div class="menu-divider"></div>
+          <button class="user-menu-item" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i> <span id="themeText" data-lang="btn_darkmode">Dark Mode</span></button>
+          <button class="user-menu-item text-danger" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> <span data-lang="btn_logout">Logout</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- DASHBOARD (Visible after login) -->
+<section id="dashboard" class="section" style="display: none; padding-top: 120px; text-align: center;">
+  <div class="section-header">
+    <h2 id="dashboard-welcome" data-lang="dashboard_welcome">Welcome back!</h2>
+    <div style="max-width: 700px; margin: 0 auto 40px; background: var(--card-bg); padding: 40px; border-radius: 20px; box-shadow: var(--shadow);">
+      <h3 style="color: var(--primary); margin-bottom: 15px;" data-lang="dashboard_impact">Ready to make an impact?</h3>
+      <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.8; margin-bottom: 30px;" data-lang="dashboard_desc">
+        Join EcoStay Club today and be part of a vibrant community of students leading climate action. 
+        Gain access to exclusive events, workshops, and sustainable projects.
+      </p>
+      <button class="btn primary" onclick="openModal('joinModal')" style="padding: 16px 40px; font-size: 1.1rem;">
+        <i class="fa-solid fa-seedling"></i> <span data-lang="hero_btn">Join EcoStay Club</span>
+      </button>
+    </div>
+
+    <div style="margin-top: 60px;">
+      <h3 data-lang="impact_title" style="margin-bottom: 30px; color: var(--text);">Our Collective Impact</h3>
+      <div class="cards" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+        <div class="card" style="padding: 30px;">
+          <div class="icon-lg" style="font-size: 2.5rem; color: var(--primary);"><i class="fa-solid fa-tree"></i></div>
+          <h2 id="counter-trees" style="font-size: 2.5rem; margin: 10px 0;">--</h2>
+          <p data-lang="trees_planted" style="color: var(--text-muted); font-weight: 500;">Trees Planted</p>
+        </div>
+        <div class="card" style="padding: 30px;">
+          <div class="icon-lg" style="font-size: 2.5rem; color: var(--accent);"><i class="fa-solid fa-cloud-arrow-down"></i></div>
+          <h2 id="counter-carbon" style="font-size: 2.5rem; margin: 10px 0;">--</h2>
+          <p data-lang="carbon_saved" style="color: var(--text-muted); font-weight: 500;">CO2 Sequestered (kg)</p>
+        </div>
+        <div class="card" style="padding: 30px;">
+          <div class="icon-lg" style="font-size: 2.5rem; color: #3498db;"><i class="fa-solid fa-users"></i></div>
+          <h2 id="counter-members" style="font-size: 2.5rem; margin: 10px 0;">--</h2>
+          <p data-lang="active_members" style="color: var(--text-muted); font-weight: 500;">Active Guardians</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HERO -->
+<section id="home" class="hero" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1628744876497-eb30460be9f6?q=80&w=2000&auto=format&fit=crop');">
+  <div class="hero-container">
+    <h1 data-lang="hero_title">Greening Our Campuses, Protecting Our Future</h1>
+    <p class="club-desc" data-lang="hero_desc">Join Rwanda's leading student network dedicated to biodiversity, campus reforestation, and community-led environmental resilience.</p>
+    <button class="btn accent" style="padding: 15px 30px; font-size: 1.1rem;" onclick="openModal('joinModal')">
+      <i class="fa-solid fa-heart"></i> <span data-lang="hero_btn">Become a Guardian of Nature</span>
+    </button>
+  </div>
+</section>
+
+<!-- MISSION -->
+<section id="mission" class="section">
+  <div class="section-header">
+    <h2 data-lang="mission_title">Our Mission & Vision</h2>
+    <p data-lang="mission_sub">Driving Sustainable Change from the Heart of Rwanda</p>
+  </div>
+  <div class="cards">
+    <div class="card text-center">
+      <div class="icon-lg"><i class="fa-solid fa-seedling"></i></div>
+      <h3 data-lang="card_mission">Our Mission</h3>
+      <p data-lang="text_mission">To transform university campuses into green havens through student-led planting, conservation advocacy, and community-driven environmental projects across Rwanda.</p>
+    </div>
+    <div class="card text-center">
+      <div class="icon-lg"><i class="fa-solid fa-eye"></i></div>
+      <h3 data-lang="card_vision">Our Vision</h3>
+      <p data-lang="text_vision">A Rwanda where every student is a guardian of biodiversity, leading the transition to a greener, climate-resilient nation for future generations.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HISTORY -->
+<section id="history" class="section alt-bg">
+  <div class="section-header"><h2 data-lang="journey_title">Our Journey</h2><p data-lang="journey_sub">From a Seed of an Idea to a National Movement</p></div>
+  <div id="history-container" class="cards">
+    <!-- Dynamic content -->
+  </div>
+</section>
+
+<!-- FIXED: WHO WE ARE SECTION (ID="who") -->
+<section id="who" class="section">
+  <div class="section-header"><h2 data-lang="nav_who">Who We Are</h2></div>
+  <div id="who-container" style="max-width: 800px; margin: 0 auto; text-align: center; font-size: 1.1rem; color: var(--text-muted); line-height: 1.8;">
+    <p data-lang="who_desc">We are a diverse group of students, faculty, and environmental activists from the University of Rwanda, united by a single goal: protecting our planet for future generations through innovation and community action.</p>
+  </div>
+</section>
+
+<!-- RESOURCE HUB -->
+<section id="resources" class="section alt-bg">
+  <div class="section-header">
+    <h2 data-lang="resource_hub_title">Green Resource Hub</h2>
+    <p data-lang="resource_hub_sub">Learn how to be a Guardian of Nature</p>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="icon-lg"><i class="fa-solid fa-book-open"></i></div>
+      <h3 data-lang="resource_1_title">Nursery Management</h3>
+      <p data-lang="resource_1_desc">A guide to starting and maintaining student-led nurseries.</p>
+      <button class="btn secondary" style="margin-top: 20px; width: 100%;"><i class="fa-solid fa-download"></i> Download PDF</button>
+    </div>
+    <div class="card">
+      <div class="icon-lg"><i class="fa-solid fa-leaf"></i></div>
+      <h3 data-lang="resource_2_title">Native Species Guide</h3>
+      <p data-lang="resource_2_desc">Learn about the trees that belong in Rwanda's ecosystems.</p>
+      <button class="btn secondary" style="margin-top: 20px; width: 100%;"><i class="fa-solid fa-download"></i> Download PDF</button>
+    </div>
+    <div class="card">
+      <div class="icon-lg"><i class="fa-solid fa-bullhorn"></i></div>
+      <h3 data-lang="resource_3_title">Climate Advocacy</h3>
+      <p data-lang="resource_3_desc">How to speak up for the planet in your local community.</p>
+      <button class="btn secondary" style="margin-top: 20px; width: 100%;"><i class="fa-solid fa-download"></i> Download PDF</button>
+    </div>
+  </div>
+</section>
+
+<!-- REFORESTATION MAP -->
+<section id="impact-map" class="section">
+  <div class="section-header">
+    <h2 data-lang="map_title">Reforestation Map</h2>
+    <p data-lang="map_sub">Explore our active restoration sites across Rwanda</p>
+  </div>
+  <div id="map"></div>
+</section>
+
+<!-- TEAM SECTION -->
+<section id="team" class="section">
+  <div class="section-header">
+    <h2 data-lang="nav_team">Our Team</h2>
+    <p data-lang="team_sub">The Passionate Minds Behind EcoStay</p>
+  </div>
+  <div id="team-container" class="cards team-grid">
+    <!-- Dynamic content loaded from script.js -->
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="section alt-bg">
+  <div class="section-header"><h2 data-lang="nav_testimonials">What Our Team Says</h2></div>
+  <div id="testimonials-container" class="cards">
+    <!-- Dynamic content loaded from script.js -->
+  </div>
+</section>
+
+<style>
+  /* Team Member Cards Styling */
+  .team-card .team-image {
+    width: 100%;
+    height: 250px; /* Fixed height for consistency */
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    border-radius: 8px 8px 0 0;
+    transition: transform 0.3s ease;
+  }
+
+  .team-card:hover .team-image {
+    transform: scale(1.03);
+  }
+
+  /* Testimonial Cards Styling */
+  .testimonial-card .user-info {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color, #e0e0e0);
+  }
+  
+  .testimonial-image {
+    width: 70px;
+    height: 70px;
+    min-width: 70px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    margin-right: 15px;
+    border: 3px solid var(--primary);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .testimonial-card h4 {
+    margin: 0 0 5px 0;
+    color: var(--text);
+    font-size: 1.1rem;
+  }
+  
+  .testimonial-card span {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+  
+  .testimonial-card .quote {
+    font-style: italic;
+    margin-bottom: 15px;
+    line-height: 1.6;
+    color: var(--text);
+    position: relative;
+    padding-left: 20px;
+    border-left: 3px solid var(--primary);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .team-card .team-image {
+      height: 200px;
+    }
+    
+    .testimonial-image {
+      width: 60px;
+      height: 60px;
+      min-width: 60px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .testimonial-card .user-info {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .testimonial-image {
+      margin: 0 auto 10px;
+    }
+  }
+</style>
+
+<!-- DONATE -->
+<section id="donate" class="section">
+  <div class="section-header"><h2 data-lang="donate_title">Support Our Impact</h2></div>
+  <div class="card donate-card" style="max-width: 700px; margin: 0 auto; padding: 0; overflow: hidden;">
+    <div class="card-image" style="background-image: url('img/donation-banner.jpg'); height: 250px;"></div>
+    <div style="padding: 40px; text-align: center;">
+      <h3 data-lang="donate_box_title">Help Us Green Rwanda</h3>
+      <p style="margin-bottom: 25px; color: var(--text-muted);" data-lang="donate_box_desc">Your contribution directly supports tree planting, nursery maintenance, and environmental workshops for students.</p>
+      
+      <div style="margin-bottom: 20px; font-weight: 600; font-size: 0.9rem; color: var(--primary);" data-lang="donate_momo">
+        <i class="fa-solid fa-mobile-screen-button"></i> Choose Amount (Mobile Money)
+      </div>
+      
+      <div class="donate-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;">
+        <button class="btn outline" onclick="selectAmount(1000, this)">1,000 RWF</button>
+        <button class="btn outline" onclick="selectAmount(5000, this)">5,000 RWF</button>
+        <button class="btn outline" onclick="selectAmount(10000, this)">10,000 RWF</button>
+      </div>
+      
+      <button class="btn primary full-width" onclick="payMomo()" data-lang="donate_pay_btn">
+        <i class="fa-solid fa-money-bill-transfer"></i> Pay with Mobile Money
+      </button>
+      
+      <div style="margin-top: 15px; display: flex; justify-content: center; gap: 20px; opacity: 0.9;">
+        <img src="https://www.mtn.com/wp-content/themes/mtn-theme/images/mtn-logo.svg" alt="MTN" style="height: 30px; object-fit: contain;">
+        <img src="https://www.airtel.com/content/dam/airtel-africa-homepage/images/airtel-logo.png" alt="Airtel" style="height: 30px; object-fit: contain;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EVENTS -->
+<section id="events-section" class="section alt-bg">
+  <div class="section-header">
+    <h2 data-lang="activities_title">Our Activities</h2>
+    <p data-lang="activities_sub">Hands-on Action for a Greener Rwanda</p>
+  </div>
+  <div id="events-container" class="cards">
+    <!-- Dynamic content loaded from script.js -->
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact" style="background: #1a472a; color: #fff; padding: 1.5rem 0 0; margin-top: 2rem; width: 100%;">
+  <div id="footer-container" style="display: flex; justify-content: space-between; align-items: center; max-width: 100%; margin: 0 auto; padding: 0 20px; flex-wrap: wrap;">
+    <!-- Dynamic footer content -->
+  </div>
+  <div style="background: rgba(0, 0, 0, 0.1); padding: 10px 0; margin-top: 1rem;">
+    <p style="margin: 0; text-align: center; font-size: 0.8rem; color: #e0e0e0;">
+      © 2026 EcoStay Club Rwanda. All rights reserved. | <a href="admin.html" style="color: #e0e0e0; text-decoration: none; opacity: 0.7;">Admin Login</a>
+    </p>
+  </div>
+</footer>
+
+<style>
+  /* Hover Effects */
+  .social-icons a:hover {
+    color: #4CAF50 !important;
+    transform: translateY(-2px);
+  }
+  
+  footer a:hover {
+    opacity: 0.9;
+    text-decoration: underline;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    footer #contact > div {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    
+    .social-icons {
+      margin: 10px 0 0 0 !important;
+    }
+    
+    footer #contact > div > div:last-child {
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
+  }
+</style>
+
+<!-- MODALS (Auth, Edit Profile, Join) - KEEP AS IS from previous response -->
+<div id="authModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header-bg">
+      <h3 data-lang="auth_title">Account Access</h3>
+      <div class="close" onclick="closeModal('authModal')">&times;</div>
+    </div>
+    <div class="auth-header">
+      <button class="tab-btn active" onclick="switchTab('login')" data-lang="tab_login">Login</button>
+      <button class="tab-btn" onclick="switchTab('register')" data-lang="tab_register">Register</button>
+    </div>
+    <div class="modal-body">
+      <form id="loginForm" class="auth-form">
+        <div class="input-group">
+          <i class="fa-solid fa-envelope"></i>
+          <input type="email" id="loginEmail" required placeholder=" " />
+          <label data-lang="label_email">Email</label>
+        </div>
+        <div class="input-group">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="loginPass" required placeholder=" " />
+          <label data-lang="label_pass">Password</label>
+          <i class="fa-solid fa-eye toggle-password" onclick="togglePasswordVisibility('loginPass', this)"></i>
+        </div>
+        <button type="submit" class="btn primary" data-lang="btn_login">Login</button>
+      </form>
+      <form id="registerForm" class="auth-form" style="display:none;">
+        <div class="input-group">
+          <i class="fa-solid fa-user"></i>
+          <input type="text" id="regName" required placeholder=" " />
+          <label data-lang="label_name">Full Name</label>
+        </div>
+        <div class="input-group">
+          <i class="fa-solid fa-envelope"></i>
+          <input type="email" id="regEmail" required placeholder=" " />
+          <label data-lang="label_email">Email</label>
+        </div>
+        <div class="input-group">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="regPass" required placeholder=" " />
+          <label data-lang="label_pass">Password</label>
+          <i class="fa-solid fa-eye toggle-password" onclick="togglePasswordVisibility('regPass', this)"></i>
+        </div>
+        <div class="input-group">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="regConfirmPass" required placeholder=" " />
+          <label data-lang="label_confirm_pass">Confirm Password</label>
+          <i class="fa-solid fa-eye toggle-password" onclick="togglePasswordVisibility('regConfirmPass', this)"></i>
+        </div>
+        <button type="submit" class="btn primary" data-lang="btn_create_acc">Create Account</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="joinModal" class="modal">
+  <div class="modal-content modal-lg">
+    <div class="modal-header-bg">
+      <h4 data-lang="hero_btn">Join EcoStay Club</h4>
+      <div class="close" onclick="closeModal('joinModal')">&times;</div>
+    </div>
+    <div class="modal-body">
+      <form id="joinClubForm" class="form-grid">
+        <div class="input-group">
+          <i class="fa-solid fa-user"></i>
+          <input type="text" id="joinName" required placeholder=" " />
+          <label data-lang="label_name">Full Names</label>
+        </div>
+        <div class="input-group">
+          <i class="fa-brands fa-whatsapp"></i>
+          <input type="tel" id="joinWhatsApp" required placeholder=" " />
+          <label data-lang="label_whatsapp">WhatsApp Number</label>
+        </div>
+        <div class="input-group">
+          <i class="fa-solid fa-envelope"></i>
+          <input type="email" id="joinEmail" required placeholder=" " />
+          <label data-lang="label_email">Email</label>
+          <!-- Hint shown to users so they know which email will receive the welcome message -->
+          <p id="joinEmailHint" class="form-hint" style="font-size:0.9rem; color:var(--text-muted); margin-top:6px; display:none;">A welcome email will be sent to: <strong id="joinEmailValue"></strong></p>
+        </div>
+        <div class="input-group">
+          <i class="fa-solid fa-graduation-cap"></i>
+          <input type="text" id="joinFaculty" required placeholder=" " />
+          <label data-lang="label_faculty">Faculty / Department</label>
+        </div>
+        <div class="input-group">
+          <i class="fa-solid fa-calendar-days"></i>
+          <input type="text" id="joinYear" required placeholder=" " />
+          <label data-lang="label_year">Year of Study</label>
+        </div>
+        <div class="input-group full-span">
+          <i class="fa-solid fa-heart"></i>
+          <textarea id="joinInterests" rows="3" placeholder=" " required style="width:100%; resize:none;"></textarea>
+          <label data-lang="label_interests">Areas of Interest</label>
+        </div>
+        <div class="full-span">
+          <button type="submit" class="btn primary full-width">Join</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="editProfileModal" class="modal"><div class="modal-content"><div class="modal-header-bg"><h3 data-lang="btn_edit_profile">Edit Profile</h3><div class="close" onclick="closeModal('editProfileModal')">&times;</div></div><div class="modal-body"><form id="editProfileForm"><div class="profile-edit-avatar"><div class="edit-avatar-wrapper"><img id="editProfilePreview" class="edit-avatar-img" src="" alt="Profile"><label for="editProfileImg" class="edit-avatar-btn"><i class="fa-solid fa-camera"></i></label><input type="file" id="editProfileImg" hidden accept="image/*"></div><p style="font-size: 0.8rem; color: #64748B; margin-top: 5px;" data-lang="hint_photo">Click camera to update photo</p></div><div class="input-group"><i class="fa-solid fa-user"></i><input type="text" id="editName" required placeholder=" " /><label data-lang="label_name">Full Name</label></div><div class="input-group"><i class="fa-solid fa-envelope"></i><input type="email" id="editEmail" required placeholder=" " /><label data-lang="label_email">Email</label></div><button type="submit" class="btn primary full-width" data-lang="btn_save">Save Changes</button></form></div></div></div>
+
+<div id="reportModal" class="modal"><div class="modal-content"><div class="modal-header-bg"><h3 id="reportTitle">Report</h3><div class="close" onclick="closeModal('reportModal')">&times;</div></div><div class="modal-body"><p id="reportContent"></p><button class="btn primary full-width" onclick="closeModal('reportModal')">Close</button></div></div></div>
+<div id="eventRegModal" class="modal"><div class="modal-content"><div class="modal-header-bg"><h3 id="eventRegTitle">Register</h3><div class="close" onclick="closeModal('eventRegModal')">&times;</div></div><div class="modal-body"><form id="eventRegForm"><div class="input-group"><i class="fa-solid fa-user"></i><input type="text" id="evRegName" required placeholder=" " /><label data-lang="label_name">Name</label></div><div class="input-group"><i class="fa-solid fa-envelope"></i><input type="email" id="evRegEmail" required placeholder=" " /><label data-lang="label_email">Email</label></div><button type="submit" class="btn primary" data-lang="btn_confirm">Confirm</button></form></div></div></div>
+
+</div> <!-- End Main Content -->
+
+<script src="script.js?v=2"></script>
+  <!-- Chatbot Button -->
+  <button id="chatbot-button" class="chatbot-button" onclick="toggleChatbot()">
+    <i class="fa-solid fa-comment-dots"></i>
+  </button>
+  
+  <!-- Chatbot Container -->
+  <div id="chatbot-container" class="chatbot-container">
+    <div class="chatbot-header">
+      <h3>EcoStay Assistant</h3>
+      <button class="chatbot-close" onclick="toggleChatbot()">×</button>
+    </div>
+    <div id="chatbot-messages" class="chatbot-messages">
+      <div class="chatbot-message bot">
+        <p>Hello! I'm your EcoStay assistant. How can I help you today?</p>
+      </div>
+    </div>
+    <div class="chatbot-input">
+      <input type="text" id="chatbot-input" placeholder="Type your message..." onkeypress="handleChatbotInput(event)">
+      <button onclick="sendChatbotMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <script>
+    // Chatbot functionality
+    function toggleChatbot() {
+      const chatbot = document.getElementById('chatbot-container');
+      const button = document.getElementById('chatbot-button');
+      if (chatbot.style.display === 'block') {
+        chatbot.style.display = 'none';
+        button.classList.remove('active');
+      } else {
+        chatbot.style.display = 'block';
+        button.classList.add('active');
+      }
+    }
+
+    function addMessage(message, isBot = false) {
+      const messages = document.getElementById('chatbot-messages');
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `chatbot-message ${isBot ? 'bot' : 'user'}`;
+      messageDiv.innerHTML = `<p>${message}</p>`;
+      messages.appendChild(messageDiv);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function handleChatbotInput(event) {
+      if (event.key === 'Enter') {
+        sendChatbotMessage();
+      }
+    }
+
+    function sendChatbotMessage() {
+      const input = document.getElementById('chatbot-input');
+      const message = input.value.trim();
+      
+      if (message) {
+        addMessage(message, false);
+        input.value = '';
+        
+        // Simple bot response (can be expanded with more sophisticated logic)
+        setTimeout(() => {
+          const responses = [
+            "I can help you learn more about EcoStay's activities and how to get involved.",
+            "Would you like to know about our upcoming events or how to join the club?",
+            "I'm here to help! What would you like to know about our environmental initiatives?",
+            "You can find more information about our team and projects on this website."
+          ];
+          const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+          addMessage(randomResponse, true);
+        }, 500);
+      }
+    }
+  </script>
+  
+  <style>
+    /* Chatbot Styles */
+    .chatbot-button {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+
+    .chatbot-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .chatbot-button.active {
+      background: #e74c3c;
+    }
+
+    .chatbot-container {
+      position: fixed;
+      bottom: 100px;
+      right: 30px;
+      width: 350px;
+      height: 500px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 1000;
+    }
+
+    .chatbot-header {
+      background: var(--primary);
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chatbot-header h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .chatbot-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .chatbot-messages {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      background: #f9f9f9;
+    }
+
+    .chatbot-message {
+      margin-bottom: 15px;
+      max-width: 80%;
+      padding: 10px 15px;
+      border-radius: 18px;
+      line-height: 1.4;
+      font-size: 14px;
+    }
+
+    .chatbot-message p {
+      margin: 0;
+    }
+
+    .chatbot-message.bot {
+      background: #e9ecef;
+      border-bottom-left-radius: 5px;
+      margin-right: auto;
+    }
+
+    .chatbot-message.user {
+      background: var(--primary);
+      color: white;
+      border-bottom-right-radius: 5px;
+      margin-left: auto;
+    }
+
+    .chatbot-input {
+      display: flex;
+      padding: 15px;
+      background: white;
+      border-top: 1px solid #eee;
+    }
+
+    .chatbot-input input {
+      flex: 1;
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .chatbot-input button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-left: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (max-width: 480px) {
+      .chatbot-container {
+        width: 90%;
+        right: 5%;
+        height: 70vh;
+        bottom: 80px;
+      }
+      
+      .chatbot-button {
+        bottom: 20px;
+        right: 20px;
+      }
+    }
+  </style>
+  </body>
+</html>
