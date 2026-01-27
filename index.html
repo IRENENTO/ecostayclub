@@ -6,7 +6,7 @@
   <title>EcoStay - Student Climate Action Rwanda</title>
   <meta name="description" content="EcoStay Club is Rwanda's leading student network dedicated to biodiversity, campus reforestation, and community-led environmental resilience. Join us in greening our campuses.">
   <meta name="keywords" content="EcoStay, Rwanda, Climate Action, Student Club, Reforestation, Biodiversity, University of Rwanda, Sustainability">
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#2d5a27">
   
   <!-- Open Graph / Facebook -->
@@ -14,38 +14,51 @@
   <meta property="og:url" content="https://ecostay.rw/">
   <meta property="og:title" content="EcoStay - Student Climate Action Rwanda">
   <meta property="og:description" content="Join Rwanda's student movement for climate resilience and campus reforestation.">
-  <meta property="og:image" content="img/ecostay-logo.png">
+  <meta property="og:image" content="/img/ecostay-logo.png">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="EcoStay - Student Climate Action Rwanda">
   <meta property="twitter:description" content="Join Rwanda's student movement for climate resilience and campus reforestation.">
-  <meta property="twitter:image" content="img/ecostay-logo.png">
+  <meta property="twitter:image" content="/img/ecostay-logo.png">
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/styles.css">
 
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script type="text/javascript">
     (function(){
        // Initialize EmailJS with your public key
-       emailjs.init("user_1234567890abcdef"); 
+       emailjs.init("NO2bFJR-pvSXk-KXs"); 
     })();
   </script>
+
+  <!-- Firebase Configuration -->
+  <script>
+    window.FIREBASE_CONFIG = {
+      apiKey: "AIzaSyDvSCCsd7O6Vx98blakHXBG8ettLBKHuZE",
+      authDomain: "ecostayclub.firebaseapp.com",
+      projectId: "ecostayclub",
+      storageBucket: "ecostayclub.firebasestorage.app",
+      messagingSenderId: "526186667158",
+      appId: "1:526186667158:web:064f152db79ec24983f6b7",
+      measurementId: "G-45R2WPSCZH"
+    };
+  </script>
 </head>
-<body style="display: none;"> <!-- Hidden until checkLogin decides what to show -->
+<body>
 
 <div id="toast-container"></div>
 
 <!-- AUTH LANDING PAGE (First thing users see) -->
-<div id="auth-landing" style="display: none;">
+<div id="auth-landing">
   <div class="auth-landing-content">
     <div class="auth-landing-logo">
       <div class="logo-row">
-        <img src="img/ecostay-logo.png" alt="EcoStay Club">
+        <img src="/img/ecostay-logo.png" alt="EcoStay Club">
         <div class="lang-switch-desktop">
             <span onclick="setLanguage('en')" class="lang-opt">EN</span> | 
             <span onclick="setLanguage('fr')" class="lang-opt">FR</span> | 
@@ -77,7 +90,7 @@
           <button type="submit" class="btn primary full-width" data-lang="btn_login">Login</button>
         </form>
         
-        <form id="landingRegisterForm" class="auth-form" style="display:none;">
+        <form id="landingRegisterForm" class="auth-form u-hidden">
           <div class="input-group">
             <i class="fa-solid fa-user"></i>
             <input type="text" id="landRegName" required placeholder=" " />
@@ -108,15 +121,15 @@
 </div>
 
 <!-- MAIN SITE WRAPPER (Hidden until login) -->
-<div id="main-content" style="display: none;">
+<div id="main-content" class="u-hidden">
 
 <!-- NAVBAR -->
 <header class="navbar">
   <div class="logo">
     <!-- Ensure filename matches EXACTLY on GitHub (case-sensitive) -->
-    <img src="img/ecostay-logo.png" alt="EcoStay Club" class="logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+    <img src="/img/ecostay-logo.png" alt="EcoStay Club" class="logo-img" onerror="this.classList.add('u-hidden'); this.nextElementSibling.classList.remove('u-hidden')">
     <!-- Fallback Text if Image Fails -->
-    <span style="display:none; font-family:'Playfair Display', serif; font-size:1.5rem; font-weight:700; color:var(--primary);">EcoStay</span>
+    <span class="u-hidden logo-fallback">EcoStay</span>
   </div>
 
   <div class="hamburger" onclick="toggleMobileMenu()">
@@ -159,10 +172,10 @@
       </button>
 
       <div id="mobile-guest">
-        <button class="btn primary full-width" style="margin-top: 15px;" onclick="openModal('authModal')" data-lang="btn_login_signup">Login / Sign Up</button>
+        <button class="btn primary full-width u-mt-15" onclick="openModal('authModal')" data-lang="btn_login_signup">Login / Sign Up</button>
       </div>
 
-      <div id="mobile-user" style="display: none;">
+      <div id="mobile-user" class="u-hidden">
         <div class="mobile-user-card">
           <img id="mobile-avatar" src="" alt="Avatar">
           <div class="mobile-user-details">
@@ -192,10 +205,10 @@
 
     <div id="guest-actions">
       <button class="icon-btn" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i></button>
-      <button class="btn primary" style="padding: 10px 24px;" onclick="openModal('authModal')" data-lang="btn_login">Login</button>
+      <button class="btn primary u-p-10-24" onclick="openModal('authModal')" data-lang="btn_login">Login</button>
     </div>
 
-    <div id="user-actions" style="display: none;">
+    <div id="user-actions" class="u-hidden">
       <div class="user-dropdown">
         <button class="user-btn">
           <div class="avatar-container">
@@ -221,37 +234,37 @@
 </header>
 
 <!-- DASHBOARD (Visible after login) -->
-<section id="dashboard" class="section" style="display: none; padding-top: 120px; text-align: center;">
+<section id="dashboard" class="section dashboard-section u-hidden">
   <div class="section-header">
     <h2 id="dashboard-welcome" data-lang="dashboard_welcome">Welcome back!</h2>
-    <div style="max-width: 700px; margin: 0 auto 40px; background: var(--card-bg); padding: 40px; border-radius: 20px; box-shadow: var(--shadow);">
-      <h3 style="color: var(--primary); margin-bottom: 15px;" data-lang="dashboard_impact">Ready to make an impact?</h3>
-      <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.8; margin-bottom: 30px;" data-lang="dashboard_desc">
+    <div class="impact-welcome-card">
+      <h3 class="impact-title-text" data-lang="dashboard_impact">Ready to make an impact?</h3>
+      <p class="impact-desc" data-lang="dashboard_desc">
         Join EcoStay Club today and be part of a vibrant community of students leading climate action. 
         Gain access to exclusive events, workshops, and sustainable projects.
       </p>
-      <button class="btn primary" onclick="openModal('joinModal')" style="padding: 16px 40px; font-size: 1.1rem;">
+      <button class="btn primary u-p-16-40" onclick="openModal('joinModal')">
         <i class="fa-solid fa-seedling"></i> <span data-lang="hero_btn">Join EcoStay Club</span>
       </button>
     </div>
 
-    <div style="margin-top: 60px;">
-      <h3 data-lang="impact_title" style="margin-bottom: 30px; color: var(--text);">Our Collective Impact</h3>
-      <div class="cards" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
-        <div class="card" style="padding: 30px;">
-          <div class="icon-lg" style="font-size: 2.5rem; color: var(--primary);"><i class="fa-solid fa-tree"></i></div>
-          <h2 id="counter-trees" style="font-size: 2.5rem; margin: 10px 0;">--</h2>
-          <p data-lang="trees_planted" style="color: var(--text-muted); font-weight: 500;">Trees Planted</p>
+    <div class="impact-stats-container">
+      <h3 class="impact-stats-title" data-lang="impact_title">Our Collective Impact</h3>
+      <div class="cards impact-stats-grid">
+        <div class="card impact-stat-card">
+          <div class="icon-lg impact-stat-icon u-text-primary"><i class="fa-solid fa-tree"></i></div>
+          <h2 id="counter-trees" class="impact-stat-number">--</h2>
+          <p class="impact-stat-text" data-lang="trees_planted">Trees Planted</p>
         </div>
-        <div class="card" style="padding: 30px;">
-          <div class="icon-lg" style="font-size: 2.5rem; color: var(--accent);"><i class="fa-solid fa-cloud-arrow-down"></i></div>
-          <h2 id="counter-carbon" style="font-size: 2.5rem; margin: 10px 0;">--</h2>
-          <p data-lang="carbon_saved" style="color: var(--text-muted); font-weight: 500;">CO2 Sequestered (kg)</p>
+        <div class="card impact-stat-card">
+          <div class="icon-lg impact-stat-icon u-text-accent"><i class="fa-solid fa-cloud-arrow-down"></i></div>
+          <h2 id="counter-carbon" class="impact-stat-number">--</h2>
+          <p class="impact-stat-text" data-lang="carbon_saved">CO2 Sequestered (kg)</p>
         </div>
-        <div class="card" style="padding: 30px;">
-          <div class="icon-lg" style="font-size: 2.5rem; color: #3498db;"><i class="fa-solid fa-users"></i></div>
-          <h2 id="counter-members" style="font-size: 2.5rem; margin: 10px 0;">--</h2>
-          <p data-lang="active_members" style="color: var(--text-muted); font-weight: 500;">Active Guardians</p>
+        <div class="card impact-stat-card">
+          <div class="icon-lg impact-stat-icon u-text-blue"><i class="fa-solid fa-users"></i></div>
+          <h2 id="counter-members" class="impact-stat-number">--</h2>
+          <p class="impact-stat-text" data-lang="active_members">Active Guardians</p>
         </div>
       </div>
     </div>
@@ -259,11 +272,11 @@
 </section>
 
 <!-- HERO -->
-<section id="home" class="hero" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1628744876497-eb30460be9f6?q=80&w=2000&auto=format&fit=crop');">
+<section id="home" class="hero">
   <div class="hero-container">
     <h1 data-lang="hero_title">Greening Our Campuses, Protecting Our Future</h1>
     <p class="club-desc" data-lang="hero_desc">Join Rwanda's leading student network dedicated to biodiversity, campus reforestation, and community-led environmental resilience.</p>
-    <button class="btn accent" style="padding: 15px 30px; font-size: 1.1rem;" onclick="openModal('joinModal')">
+    <button class="btn accent u-p-15-30" onclick="openModal('joinModal')">
       <i class="fa-solid fa-heart"></i> <span data-lang="hero_btn">Become a Guardian of Nature</span>
     </button>
   </div>
@@ -300,7 +313,7 @@
 <!-- FIXED: WHO WE ARE SECTION (ID="who") -->
 <section id="who" class="section">
   <div class="section-header"><h2 data-lang="nav_who">Who We Are</h2></div>
-  <div id="who-container" style="max-width: 800px; margin: 0 auto; text-align: center; font-size: 1.1rem; color: var(--text-muted); line-height: 1.8;">
+  <div id="who-container" class="who-we-are-text">
     <p data-lang="who_desc">We are a diverse group of students, faculty, and environmental activists from the University of Rwanda, united by a single goal: protecting our planet for future generations through innovation and community action.</p>
   </div>
 </section>
@@ -316,19 +329,19 @@
       <div class="icon-lg"><i class="fa-solid fa-book-open"></i></div>
       <h3 data-lang="resource_1_title">Nursery Management</h3>
       <p data-lang="resource_1_desc">A guide to starting and maintaining student-led nurseries.</p>
-      <button class="btn secondary" style="margin-top: 20px; width: 100%;"><i class="fa-solid fa-download"></i> Download PDF</button>
+      <button class="btn secondary u-w-full u-mt-20"><i class="fa-solid fa-download"></i> Download PDF</button>
     </div>
     <div class="card">
       <div class="icon-lg"><i class="fa-solid fa-leaf"></i></div>
       <h3 data-lang="resource_2_title">Native Species Guide</h3>
-      <p data-lang="resource_2_desc">Learn about the trees that belong in Rwanda's ecosystems.</p>
-      <button class="btn secondary" style="margin-top: 20px; width: 100%;"><i class="fa-solid fa-download"></i> Download PDF</button>
+      <p data-lang="resource_2_desc">Identify Rwanda's native trees and their ecological roles.</p>
+      <button class="btn secondary u-w-full u-mt-20"><i class="fa-solid fa-download"></i> Download PDF</button>
     </div>
     <div class="card">
-      <div class="icon-lg"><i class="fa-solid fa-bullhorn"></i></div>
-      <h3 data-lang="resource_3_title">Climate Advocacy</h3>
-      <p data-lang="resource_3_desc">How to speak up for the planet in your local community.</p>
-      <button class="btn secondary" style="margin-top: 20px; width: 100%;"><i class="fa-solid fa-download"></i> Download PDF</button>
+      <div class="icon-lg"><i class="fa-solid fa-earth-africa"></i></div>
+      <h3 data-lang="resource_3_title">Climate Resilience</h3>
+      <p data-lang="resource_3_desc">Understanding climate change impacts on Rwandan ecosystems.</p>
+      <button class="btn secondary u-w-full u-mt-20"><i class="fa-solid fa-download"></i> Download PDF</button>
     </div>
   </div>
 </section>
@@ -336,130 +349,48 @@
 <!-- REFORESTATION MAP -->
 <section id="impact-map" class="section">
   <div class="section-header">
-    <h2 data-lang="map_title">Reforestation Map</h2>
-    <p data-lang="map_sub">Explore our active restoration sites across Rwanda</p>
+    <h2 data-lang="map_title">Our Reforestation Impact</h2>
+    <p data-lang="map_sub">Tracking our green progress across Rwanda</p>
   </div>
   <div id="map"></div>
 </section>
 
-<!-- TEAM SECTION -->
-<section id="team" class="section">
+<!-- TEAM -->
+<section id="team" class="section alt-bg">
   <div class="section-header">
-    <h2 data-lang="nav_team">Our Team</h2>
-    <p data-lang="team_sub">The Passionate Minds Behind EcoStay</p>
+    <h2 data-lang="team_title">Our Leadership Team</h2>
+    <p data-lang="team_sub">Meet the passionate students behind EcoStay Club</p>
   </div>
-  <div id="team-container" class="cards team-grid">
+  <div id="team-container" class="cards">
     <!-- Dynamic content loaded from script.js -->
   </div>
 </section>
 
 <!-- TESTIMONIALS -->
-<section id="testimonials" class="section alt-bg">
-  <div class="section-header"><h2 data-lang="nav_testimonials">What Our Team Says</h2></div>
+<section id="testimonials" class="section">
+  <div class="section-header">
+    <h2 data-lang="testimonials_title">Community Voices</h2>
+    <p data-lang="testimonials_sub">What our members say about their experience</p>
+  </div>
   <div id="testimonials-container" class="cards">
     <!-- Dynamic content loaded from script.js -->
   </div>
 </section>
 
-<style>
-  /* Team Member Cards Styling */
-  .team-card .team-image {
-    width: 100%;
-    height: 250px; /* Fixed height for consistency */
-    background-size: cover;
-    background-position: center top;
-    background-repeat: no-repeat;
-    border-radius: 8px 8px 0 0;
-    transition: transform 0.3s ease;
-  }
-
-  .team-card:hover .team-image {
-    transform: scale(1.03);
-  }
-
-  /* Testimonial Cards Styling */
-  .testimonial-card .user-info {
-    display: flex;
-    align-items: center;
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid var(--border-color, #e0e0e0);
-  }
-  
-  .testimonial-image {
-    width: 70px;
-    height: 70px;
-    min-width: 70px;
-    border-radius: 50%;
-    background-size: cover;
-    background-position: center;
-    margin-right: 15px;
-    border: 3px solid var(--primary);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  }
-  
-  .testimonial-card h4 {
-    margin: 0 0 5px 0;
-    color: var(--text);
-    font-size: 1.1rem;
-  }
-  
-  .testimonial-card span {
-    display: block;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    line-height: 1.4;
-  }
-  
-  .testimonial-card .quote {
-    font-style: italic;
-    margin-bottom: 15px;
-    line-height: 1.6;
-    color: var(--text);
-    position: relative;
-    padding-left: 20px;
-    border-left: 3px solid var(--primary);
-  }
-
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .team-card .team-image {
-      height: 200px;
-    }
-    
-    .testimonial-image {
-      width: 60px;
-      height: 60px;
-      min-width: 60px;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .testimonial-card .user-info {
-      flex-direction: column;
-      text-align: center;
-    }
-    
-    .testimonial-image {
-      margin: 0 auto 10px;
-    }
-  }
-</style>
-
 <!-- DONATE -->
 <section id="donate" class="section">
   <div class="section-header"><h2 data-lang="donate_title">Support Our Impact</h2></div>
-  <div class="card donate-card" style="max-width: 700px; margin: 0 auto; padding: 0; overflow: hidden;">
-    <div class="card-image" style="background-image: url('img/donation-banner.jpg'); height: 250px;"></div>
-    <div style="padding: 40px; text-align: center;">
+  <div class="card donate-main-card">
+    <div class="donate-banner"></div>
+    <div class="donate-body">
       <h3 data-lang="donate_box_title">Help Us Green Rwanda</h3>
-      <p style="margin-bottom: 25px; color: var(--text-muted);" data-lang="donate_box_desc">Your contribution directly supports tree planting, nursery maintenance, and environmental workshops for students.</p>
+      <p class="impact-desc" data-lang="donate_box_desc">Your contribution directly supports tree planting, nursery maintenance, and environmental workshops for students.</p>
       
-      <div style="margin-bottom: 20px; font-weight: 600; font-size: 0.9rem; color: var(--primary);" data-lang="donate_momo">
+      <div class="donate-momo-title" data-lang="donate_momo">
         <i class="fa-solid fa-mobile-screen-button"></i> Choose Amount (Mobile Money)
       </div>
       
-      <div class="donate-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;">
+      <div class="donate-grid-custom">
         <button class="btn outline" onclick="selectAmount(1000, this)">1,000 RWF</button>
         <button class="btn outline" onclick="selectAmount(5000, this)">5,000 RWF</button>
         <button class="btn outline" onclick="selectAmount(10000, this)">10,000 RWF</button>
@@ -469,15 +400,15 @@
         <i class="fa-solid fa-money-bill-transfer"></i> Pay with Mobile Money
       </button>
       
-      <div style="margin-top: 15px; display: flex; justify-content: center; gap: 20px; opacity: 0.9;">
-        <img src="https://www.mtn.com/wp-content/themes/mtn-theme/images/mtn-logo.svg" alt="MTN" style="height: 30px; object-fit: contain;">
-        <img src="https://www.airtel.com/content/dam/airtel-africa-homepage/images/airtel-logo.png" alt="Airtel" style="height: 30px; object-fit: contain;">
+      <div class="donate-partners">
+        <img src="https://www.mtn.com/wp-content/themes/mtn-theme/images/mtn-logo.svg" alt="MTN" class="partner-logo">
+        <img src="https://www.airtel.com/content/dam/airtel-africa-homepage/images/airtel-logo.png" alt="Airtel" class="partner-logo">
       </div>
     </div>
   </div>
 </section>
 
-<!-- EVENTS -->
+<!-- ACTIVITIES -->
 <section id="events-section" class="section alt-bg">
   <div class="section-header">
     <h2 data-lang="activities_title">Our Activities</h2>
@@ -489,48 +420,16 @@
 </section>
 
 <!-- FOOTER -->
-<footer id="contact" style="background: #1a472a; color: #fff; padding: 1.5rem 0 0; margin-top: 2rem; width: 100%;">
-  <div id="footer-container" style="display: flex; justify-content: space-between; align-items: center; max-width: 100%; margin: 0 auto; padding: 0 20px; flex-wrap: wrap;">
+<footer id="contact" class="site-footer">
+  <div id="footer-container" class="footer-flex-container">
     <!-- Dynamic footer content -->
   </div>
-  <div style="background: rgba(0, 0, 0, 0.1); padding: 10px 0; margin-top: 1rem;">
-    <p style="margin: 0; text-align: center; font-size: 0.8rem; color: #e0e0e0;">
-      © 2026 EcoStay Club Rwanda. All rights reserved. | <a href="admin.html" style="color: #e0e0e0; text-decoration: none; opacity: 0.7;">Admin Login</a>
+  <div class="footer-legal-bar">
+    <p class="footer-legal-text">
+      © 2026 EcoStay Club Rwanda. All rights reserved. | <a href="admin.html" class="footer-link-alt">Admin Login</a>
     </p>
   </div>
 </footer>
-
-<style>
-  /* Hover Effects */
-  .social-icons a:hover {
-    color: #4CAF50 !important;
-    transform: translateY(-2px);
-  }
-  
-  footer a:hover {
-    opacity: 0.9;
-    text-decoration: underline;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    footer #contact > div {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
-    }
-    
-    .social-icons {
-      margin: 10px 0 0 0 !important;
-    }
-    
-    footer #contact > div > div:last-child {
-      flex-direction: column;
-      gap: 8px;
-      width: 100%;
-    }
-  }
-</style>
 
 <!-- MODALS (Auth, Edit Profile, Join) - KEEP AS IS from previous response -->
 <div id="authModal" class="modal">
@@ -558,7 +457,7 @@
         </div>
         <button type="submit" class="btn primary" data-lang="btn_login">Login</button>
       </form>
-      <form id="registerForm" class="auth-form" style="display:none;">
+      <form id="registerForm" class="auth-form u-hidden">
         <div class="input-group">
           <i class="fa-solid fa-user"></i>
           <input type="text" id="regName" required placeholder=" " />
@@ -610,7 +509,7 @@
           <input type="email" id="joinEmail" required placeholder=" " />
           <label data-lang="label_email">Email</label>
           <!-- Hint shown to users so they know which email will receive the welcome message -->
-          <p id="joinEmailHint" class="form-hint" style="font-size:0.9rem; color:var(--text-muted); margin-top:6px; display:none;">A welcome email will be sent to: <strong id="joinEmailValue"></strong></p>
+          <p id="joinEmailHint" class="form-hint u-fs-0-9 u-text-muted u-mt-6 u-hidden">A welcome email will be sent to: <strong id="joinEmailValue"></strong></p>
         </div>
         <div class="input-group">
           <i class="fa-solid fa-graduation-cap"></i>
@@ -624,25 +523,25 @@
         </div>
         <div class="input-group full-span">
           <i class="fa-solid fa-heart"></i>
-          <textarea id="joinInterests" rows="3" placeholder=" " required style="width:100%; resize:none;"></textarea>
+          <textarea id="joinInterests" rows="3" placeholder=" " required class="u-w-full u-resize-none"></textarea>
           <label data-lang="label_interests">Areas of Interest</label>
         </div>
         <div class="full-span">
-          <button type="submit" class="btn primary full-width">Join</button>
+          <button type="submit" id="joinSubmitBtn" class="btn primary full-width" disabled>Join</button>
         </div>
       </form>
     </div>
   </div>
 </div>
 
-<div id="editProfileModal" class="modal"><div class="modal-content"><div class="modal-header-bg"><h3 data-lang="btn_edit_profile">Edit Profile</h3><div class="close" onclick="closeModal('editProfileModal')">&times;</div></div><div class="modal-body"><form id="editProfileForm"><div class="profile-edit-avatar"><div class="edit-avatar-wrapper"><img id="editProfilePreview" class="edit-avatar-img" src="" alt="Profile"><label for="editProfileImg" class="edit-avatar-btn"><i class="fa-solid fa-camera"></i></label><input type="file" id="editProfileImg" hidden accept="image/*"></div><p style="font-size: 0.8rem; color: #64748B; margin-top: 5px;" data-lang="hint_photo">Click camera to update photo</p></div><div class="input-group"><i class="fa-solid fa-user"></i><input type="text" id="editName" required placeholder=" " /><label data-lang="label_name">Full Name</label></div><div class="input-group"><i class="fa-solid fa-envelope"></i><input type="email" id="editEmail" required placeholder=" " /><label data-lang="label_email">Email</label></div><button type="submit" class="btn primary full-width" data-lang="btn_save">Save Changes</button></form></div></div></div>
+<div id="editProfileModal" class="modal"><div class="modal-content"><div class="modal-header-bg"><h3 data-lang="btn_edit_profile">Edit Profile</h3><div class="close" onclick="closeModal('editProfileModal')">&times;</div></div><div class="modal-body"><form id="editProfileForm"><div class="profile-edit-avatar"><div class="edit-avatar-wrapper"><img id="editProfilePreview" class="edit-avatar-img" src="" alt="Profile"><label for="editProfileImg" class="edit-avatar-btn"><i class="fa-solid fa-camera"></i></label><input type="file" id="editProfileImg" hidden accept="image/*"></div><p class="u-fs-0-8 u-text-muted u-mt-6" data-lang="hint_photo">Click camera to update photo</p></div><div class="input-group"><i class="fa-solid fa-user"></i><input type="text" id="editName" required placeholder=" " /><label data-lang="label_name">Full Name</label></div><div class="input-group"><i class="fa-solid fa-envelope"></i><input type="email" id="editEmail" required placeholder=" " /><label data-lang="label_email">Email</label></div><button type="submit" class="btn primary full-width" data-lang="btn_save">Save Changes</button></form></div></div></div>
 
 <div id="reportModal" class="modal"><div class="modal-content"><div class="modal-header-bg"><h3 id="reportTitle">Report</h3><div class="close" onclick="closeModal('reportModal')">&times;</div></div><div class="modal-body"><p id="reportContent"></p><button class="btn primary full-width" onclick="closeModal('reportModal')">Close</button></div></div></div>
 <div id="eventRegModal" class="modal"><div class="modal-content"><div class="modal-header-bg"><h3 id="eventRegTitle">Register</h3><div class="close" onclick="closeModal('eventRegModal')">&times;</div></div><div class="modal-body"><form id="eventRegForm"><div class="input-group"><i class="fa-solid fa-user"></i><input type="text" id="evRegName" required placeholder=" " /><label data-lang="label_name">Name</label></div><div class="input-group"><i class="fa-solid fa-envelope"></i><input type="email" id="evRegEmail" required placeholder=" " /><label data-lang="label_email">Email</label></div><button type="submit" class="btn primary" data-lang="btn_confirm">Confirm</button></form></div></div></div>
 
 </div> <!-- End Main Content -->
 
-<script src="script.js?v=2"></script>
+<script type="module" src="script.js"></script>
   <!-- Chatbot Button -->
   <button id="chatbot-button" class="chatbot-button" onclick="toggleChatbot()">
     <i class="fa-solid fa-comment-dots"></i>
@@ -670,11 +569,11 @@
     function toggleChatbot() {
       const chatbot = document.getElementById('chatbot-container');
       const button = document.getElementById('chatbot-button');
-      if (chatbot.style.display === 'block') {
-        chatbot.style.display = 'none';
+      if (chatbot.classList.contains('active')) {
+        chatbot.classList.remove('active');
         button.classList.remove('active');
       } else {
-        chatbot.style.display = 'block';
+        chatbot.classList.add('active');
         button.classList.add('active');
       }
     }
@@ -716,152 +615,5 @@
       }
     }
   </script>
-  
-  <style>
-    /* Chatbot Styles */
-    .chatbot-button {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: var(--primary);
-      color: white;
-      border: none;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      z-index: 1000;
-      transition: all 0.3s ease;
-    }
-
-    .chatbot-button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    .chatbot-button.active {
-      background: #e74c3c;
-    }
-
-    .chatbot-container {
-      position: fixed;
-      bottom: 100px;
-      right: 30px;
-      width: 350px;
-      height: 500px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
-      display: none;
-      flex-direction: column;
-      overflow: hidden;
-      z-index: 1000;
-    }
-
-    .chatbot-header {
-      background: var(--primary);
-      color: white;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .chatbot-header h3 {
-      margin: 0;
-      font-size: 16px;
-    }
-
-    .chatbot-close {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 24px;
-      cursor: pointer;
-      line-height: 1;
-    }
-
-    .chatbot-messages {
-      flex: 1;
-      padding: 15px;
-      overflow-y: auto;
-      background: #f9f9f9;
-    }
-
-    .chatbot-message {
-      margin-bottom: 15px;
-      max-width: 80%;
-      padding: 10px 15px;
-      border-radius: 18px;
-      line-height: 1.4;
-      font-size: 14px;
-    }
-
-    .chatbot-message p {
-      margin: 0;
-    }
-
-    .chatbot-message.bot {
-      background: #e9ecef;
-      border-bottom-left-radius: 5px;
-      margin-right: auto;
-    }
-
-    .chatbot-message.user {
-      background: var(--primary);
-      color: white;
-      border-bottom-right-radius: 5px;
-      margin-left: auto;
-    }
-
-    .chatbot-input {
-      display: flex;
-      padding: 15px;
-      background: white;
-      border-top: 1px solid #eee;
-    }
-
-    .chatbot-input input {
-      flex: 1;
-      padding: 10px 15px;
-      border: 1px solid #ddd;
-      border-radius: 20px;
-      outline: none;
-      font-size: 14px;
-    }
-
-    .chatbot-input button {
-      background: var(--primary);
-      color: white;
-      border: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      margin-left: 10px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    @media (max-width: 480px) {
-      .chatbot-container {
-        width: 90%;
-        right: 5%;
-        height: 70vh;
-        bottom: 80px;
-      }
-      
-      .chatbot-button {
-        bottom: 20px;
-        right: 20px;
-      }
-    }
-  </style>
-  </body>
+</body>
 </html>

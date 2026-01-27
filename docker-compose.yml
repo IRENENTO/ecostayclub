@@ -1,0 +1,61 @@
+version: "3.8"
+
+services:
+  # Frontend + Backend (Node.js)
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - DATABASE_URL=${MONGODB_URI}
+      - JWT_SECRET=${JWT_SECRET}
+      - FIREBASE_API_KEY=${FIREBASE_API_KEY}
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    networks:
+      - ecostay-network
+
+  # MongoDB Database
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-password}
+      MONGO_INITDB_DATABASE: ecostay
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - ecostay-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache (Optional)
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - ecostay-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mongodb_data:
+  mongodb_config:
+
+networks:
+  ecostay-network:
+    driver: bridge

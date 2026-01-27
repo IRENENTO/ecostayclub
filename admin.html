@@ -1,1402 +1,1156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoStay Club - Admin Dashboard</title>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --primary: #1a472a;
-            --primary-light: #2d5a3f;
-            --secondary: #4CAF50;
-            --text: #333;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --gray: #6c757d;
-            --light-gray: #e9ecef;
-            --border: #dee2e6;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: #f5f5f5;
-            color: var(--text);
-            line-height: 1.6;
-        }
-        
-        .dashboard {
-            display: flex;
-            min-height: 100vh;
-        }
-        
-        /* Sidebar */
-        .sidebar {
-            width: 250px;
-            background: var(--primary);
-            color: white;
-            padding: 1.5rem 0;
-            position: fixed;
-            height: 100%;
-            overflow-y: auto;
-        }
-        
-        .logo {
-            text-align: center;
-            padding: 0 1rem 1.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 1.5rem;
-        }
-        
-        .logo img {
-            max-width: 120px;
-            height: auto;
-        }
-        
-        .nav-menu {
-            padding: 0 1rem;
-        }
-        
-        .nav-item {
-            margin-bottom: 0.5rem;
-        }
-        
-        .nav-link {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 1rem;
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-link:hover, .nav-link.active {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-        
-        .nav-link i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-        }
-        
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            margin-left: 250px;
-            padding: 2rem;
-        }
-        
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .page-title h1 {
-            font-size: 1.75rem;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-        
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .notification-icon {
-            position: relative;
-            color: var(--gray);
-            font-size: 1.25rem;
-            cursor: pointer;
-        }
-        
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: var(--secondary);
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--light-gray);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: var(--primary);
-        }
-        
-        .user-info h4 {
-            font-size: 0.9rem;
-            margin-bottom: 0.2rem;
-        }
-        
-        .user-info p {
-            font-size: 0.8rem;
-            color: var(--gray);
-        }
-        
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .stat-card {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-        }
-        
-        .stat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-        
-        .stat-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: white;
-        }
-        
-        .stat-icon.members { background: #4e73df; }
-        .stat-icon.events { background: #1cc88a; }
-        .stat-icon.donations { background: #f6c23e; }
-        .stat-icon.activities { background: #e74a3b; }
-        
-        .stat-value {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--dark);
-            margin: 0.5rem 0;
-        }
-        
-        .stat-label {
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-        
-        .stat-change {
-            display: flex;
-            align-items: center;
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
-        }
-        
-        .stat-change.positive {
-            color: #1cc88a;
-        }
-        
-        .stat-change.negative {
-            color: #e74a3b;
-        }
-        
-        /* Charts */
-        .charts-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .chart-card {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        }
-        
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-        
-        .chart-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--dark);
-        }
-        
-        .chart-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .chart-btn {
-            background: none;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 0.25rem 0.75rem;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .chart-btn:hover, .chart-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-        
-        .chart-container {
-            position: relative;
-            height: 300px;
-            width: 100%;
-        }
-        
-        /* Recent Activity */
-        .activity-card {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        }
-        
-        .activity-list {
-            list-style: none;
-        }
-        
-        .activity-item {
-            display: flex;
-            align-items: flex-start;
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--light-gray);
-        }
-        
-        .activity-item:last-child {
-            border-bottom: none;
-        }
-        
-        .activity-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--light-gray);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
-            flex-shrink: 0;
-            color: var(--primary);
-        }
-        
-        .activity-content {
-            flex: 1;
-        }
-        
-        .activity-title {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-        
-        .activity-desc {
-            font-size: 0.9rem;
-            color: var(--gray);
-            margin-bottom: 0.25rem;
-        }
-        
-        .activity-time {
-            font-size: 0.8rem;
-            color: var(--gray);
-        }
-        
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .charts-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        @media (max-width: 992px) {
-            .sidebar {
-                width: 80px;
-                overflow: hidden;
-            }
-            
-            .sidebar .logo span,
-            .sidebar .nav-link span {
-                display: none;
-            }
-            
-            .sidebar .nav-link {
-                justify-content: center;
-                padding: 0.75rem;
-            }
-            
-            .sidebar .nav-link i {
-                margin-right: 0;
-                font-size: 1.2rem;
-            }
-            
-            .main-content {
-                margin-left: 80px;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            
-            .user-info {
-                display: none;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-            
-            .user-menu {
-                width: 100%;
-                justify-content: space-between;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoStay Admin Dashboard - CMS</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      color: #2d3436;
+    }
+
+    .admin-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 280px;
+      background: linear-gradient(135deg, #1A4D2E 0%, #2d6a4f 100%);
+      color: white;
+      padding: 30px 20px;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar-logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar-nav { list-style: none; }
+    .sidebar-nav li { margin-bottom: 10px; }
+
+    .sidebar-nav button {
+      width: 100%;
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.8);
+      padding: 12px 15px;
+      text-align: left;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar-nav button:hover,
+    .sidebar-nav button.active {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+    }
+
+    .sidebar-nav button i { width: 20px; text-align: center; }
+
+    /* MAIN CONTENT */
+    .main-content {
+      margin-left: 280px;
+      flex: 1;
+      padding: 30px;
+      max-width: 1400px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      padding: 20px 30px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .topbar h1 {
+      font-size: 1.8rem;
+      color: #1A4D2E;
+    }
+
+    .topbar-actions {
+      display: flex;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+
+    .btn-primary { background: #1A4D2E; color: white; }
+    .btn-primary:hover { background: #2d5a3a; transform: translateY(-2px); }
+    .btn-success { background: #4CAF50; color: white; }
+    .btn-success:hover { background: #45a049; }
+    .btn-danger { background: #e74c3c; color: white; }
+    .btn-danger:hover { background: #c0392b; }
+    .btn-secondary { background: #95a5a6; color: white; }
+    .btn-secondary:hover { background: #7f8c8d; }
+    .btn-outline { background: none; border: 1px solid #ddd; color: #2d3436; }
+    .btn-outline:hover { background: #f5f5f5; }
+    .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+
+    /* TABS */
+    .tab-container { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); }
+    .tab-buttons { display: flex; border-bottom: 1px solid #e0e0e0; background: #fafafa; }
+    
+    .tab-btn {
+      flex: 1;
+      padding: 15px 20px;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      font-weight: 600;
+      color: #666;
+      transition: all 0.3s;
+    }
+
+    .tab-btn:hover { color: #1A4D2E; background: #f5f5f5; }
+    .tab-btn.active { color: #1A4D2E; border-bottom-color: #1A4D2E; }
+
+    .tab-content { display: none; padding: 30px; animation: fadeIn 0.3s; }
+    .tab-content.active { display: block; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* FORMS */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #2d3436;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #1A4D2E;
+      box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    /* CARDS */
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #e0e0e0;
+      margin-bottom: 20px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .item-list { margin: 20px 0; }
+
+    .item-list-item {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 4px solid #1A4D2E;
+    }
+
+    .item-info { flex: 1; }
+    .item-title { font-weight: 600; color: #2d3436; margin-bottom: 5px; }
+    .item-desc { font-size: 0.9rem; color: #666; }
+    .item-actions { display: flex; gap: 8px; }
+
+    /* TOGGLE SWITCH */
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 24px;
+      background: #ccc;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .toggle-switch.active { background: #4CAF50; }
+
+    .toggle-slider {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: left 0.3s;
+    }
+
+    .toggle-switch.active .toggle-slider { left: 28px; }
+
+    .visibility-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .admin-container { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; position: relative; padding: 20px; }
+      .main-content { margin-left: 0; padding: 20px; }
+      .topbar { flex-direction: column; gap: 15px; text-align: center; }
+      .form-row { grid-template-columns: 1fr; }
+      .tab-buttons { overflow-x: auto; }
+      .tab-btn { white-space: nowrap; }
+    }
+
+    .text-center { text-align: center; }
+    .mt-20 { margin-top: 20px; }
+    .mt-30 { margin-top: 30px; }
+    .mb-20 { margin-bottom: 20px; }
+    .text-muted { color: #666; }
+    
+    .admin-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .admin-modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    
+    .admin-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 15px;
+    }
+    
+    .admin-modal-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    
+    .u-bg-nav { background: rgba(255,255,255,0.1) !important; }
+    .u-w-full { width: 100% !important; }
+  </style>
 </head>
 <body>
-    <div class="dashboard">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="logo">
-                <img src="img/ecostay-logo.png" alt="EcoStay Admin">
-            </div>
-            <nav class="nav-menu">
-                <div class="nav-item">
-                    <a href="#" class="nav-link active" onclick="switchView('dashboard', event)">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a href="#" class="nav-link" onclick="switchView('members', event)">
-                        <i class="fas fa-users"></i>
-                        <span>Members</span>
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a href="#" class="nav-link" onclick="switchView('content', event)">
-                        <i class="fas fa-edit"></i>
-                        <span>Edit Site</span>
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a href="#" class="nav-link" onclick="switchView('team', event)">
-                        <i class="fas fa-user-friends"></i>
-                        <span>Manage Team</span>
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a href="#" class="nav-link" onclick="switchView('history', event)">
-                        <i class="fas fa-history"></i>
-                        <span>Manage History</span>
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a href="#" class="nav-link" onclick="switchView('events', event)">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span>Manage Events</span>
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a href="#" class="nav-link" onclick="switchView('donations', event)">
-                        <i class="fas fa-hand-holding-usd"></i>
-                        <span>Donations</span>
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a href="#" class="nav-link" onclick="switchView('testimonials', event)">
-                        <i class="fas fa-quote-left"></i>
-                        <span>Testimonials</span>
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a href="#" class="nav-link" onclick="switchView('dashboard', event)">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Analytics</span>
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a href="#" class="nav-link" onclick="logoutAdmin()">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Logout</span>
-                    </a>
-                </div>
-            </nav>
-        </aside>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="header">
-                <div class="page-title">
-                    <h1>Dashboard</h1>
-                    <p>Welcome back, Admin</p>
-                </div>
-                <div class="user-menu">
-                    <div class="notification-icon">
-                        <i class="far fa-bell"></i>
-                        <span class="notification-badge">3</span>
-                    </div>
-                    <div class="user-profile">
-                        <div class="user-avatar">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <div class="user-info">
-                            <h4>Admin User</h4>
-                            <p>Administrator</p>
-                        </div>
-                        <i class="fas fa-chevron-down" style="font-size: 0.8rem; color: var(--gray);"></i>
-                    </div>
-                </div>
-            </div>
+<div class="admin-container">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <i class="fas fa-leaf"></i> EcoStay CMS
+    </div>
+    <ul class="sidebar-nav">
+      <li><button type="button" class="tab-btn active" onclick="switchTab('general', event)"><i class="fas fa-sliders-h"></i> General</button></li>
+      <li><button type="button" class="tab-btn" onclick="switchTab('hero', event)"><i class="fas fa-image"></i> Hero Section</button></li>
+      <li><button type="button" class="tab-btn" onclick="switchTab('mission', event)"><i class="fas fa-bullseye"></i> Mission</button></li>
+      <li><button type="button" class="tab-btn" onclick="switchTab('impact', event)"><i class="fas fa-chart-line"></i> Impact</button></li>
+      <li><button type="button" class="tab-btn" onclick="switchTab('team', event)"><i class="fas fa-users"></i> Team</button></li>
+      <li><button type="button" class="tab-btn" onclick="switchTab('testimonials', event)"><i class="fas fa-quote-left"></i> Testimonials</button></li>
+      <li><button type="button" class="tab-btn" onclick="switchTab('events', event)"><i class="fas fa-calendar-alt"></i> Events</button></li>
+      <li><button type="button" class="tab-btn" onclick="switchTab('history', event)"><i class="fas fa-history"></i> History</button></li>
+      <li><button type="button" class="tab-btn" onclick="switchTab('theme', event)"><i class="fas fa-palette"></i> Theme</button></li>
+      <li style="margin-top: 30px;"><button type="button" class="tab-btn" onclick="previewSite()" style="background: rgba(255,255,255,0.1);"><i class="fas fa-eye"></i> Preview</button></li>
+      <li><button type="button" class="tab-btn" onclick="window.location.href='index.html'" style="background: rgba(255,255,255,0.1);"><i class="fas fa-home"></i> Go to Site</button></li>
+    </ul>
+  </div>
 
-            <div id="dashboard-view" class="view-section">
-                <!-- Stats Cards -->
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div>
-                                <div class="stat-label">Total Members</div>
-                                <div id="admin-stat-members" class="stat-value">--</div>
-                            </div>
-                            <div class="stat-icon members">
-                                <i class="fas fa-users"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="stat-trees-card" class="stat-card">
-                        <div class="stat-header">
-                            <div>
-                                <div class="stat-label">Trees Planted</div>
-                                <div id="admin-stat-trees" class="stat-value">--</div>
-                            </div>
-                            <div class="stat-icon events">
-                                <i class="fas fa-tree"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div>
-                                <div class="stat-label">Total Donations</div>
-                                <div class="stat-value">$12,450</div>
-                            </div>
-                            <div class="stat-icon donations">
-                                <i class="fas fa-hand-holding-usd"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Charts -->
-                <div class="charts-grid">
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <h3 class="chart-title">Members Growth</h3>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="membersChart"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <h3 class="chart-title">Event Participation</h3>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="eventsChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="members-view" class="view-section" style="display: none;">
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3 class="chart-title">Registered Members</h3>
-                    </div>
-                    <div style="overflow-x: auto;">
-                        <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
-                            <thead>
-                                <tr style="text-align: left; border-bottom: 2px solid var(--border);">
-                                    <th style="padding: 12px;">Name</th>
-                                    <th style="padding: 12px;">Email</th>
-                                    <th style="padding: 12px;">Role</th>
-                                    <th style="padding: 12px;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="members-table-body">
-                                <!-- Users will be loaded here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div id="content-view" class="view-section" style="display: none;">
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3 class="chart-title">Edit Site Content</h3>
-                    </div>
-                    <form id="edit-site-data-form">
-                        <h4 style="margin-top: 1rem; color: var(--primary);">Impact Statistics</h4>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 10px;">
-                            <div>
-                                <label style="display: block; font-size: 0.8rem;">Trees Planted</label>
-                                <input type="number" id="edit-trees" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px;">
-                            </div>
-                            <div>
-                                <label style="display: block; font-size: 0.8rem;">CO2 Saved (kg)</label>
-                                <input type="number" id="edit-carbon" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px;">
-                            </div>
-                            <div>
-                                <label style="display: block; font-size: 0.8rem;">Active Members</label>
-                                <input type="number" id="edit-members-count" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px;">
-                            </div>
-                        </div>
-
-                        <h4 style="margin-top: 2rem; color: var(--primary);">Who We Are & Vision</h4>
-                        <div style="margin-top: 10px;">
-                            <label style="display: block; font-size: 0.8rem;">Who We Are Description</label>
-                            <textarea id="edit-who-text" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; height: 80px; margin-bottom: 10px;"></textarea>
-
-                            <label style="display: block; font-size: 0.8rem;">Vision Text</label>
-                            <textarea id="edit-vision-text" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; height: 60px;"></textarea>
-                        </div>
-
-                        <h4 style="margin-top: 2rem; color: var(--primary);">Footer Contact Info</h4>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 10px;">
-                            <div>
-                                <label style="display: block; font-size: 0.8rem;">Contact Email</label>
-                                <input type="email" id="edit-footer-email" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px;">
-                            </div>
-                            <div>
-                                <label style="display: block; font-size: 0.8rem;">Contact Phone</label>
-                                <input type="text" id="edit-footer-phone" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px;">
-                            </div>
-                            <div style="grid-column: span 2;">
-                                <label style="display: block; font-size: 0.8rem;">Office Address</label>
-                                <input type="text" id="edit-footer-address" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px;">
-                            </div>
-                        </div>
-
-                        <button type="submit" style="margin-top: 2rem; background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">Save All Changes</button>
-                    </form>
-                </div>
-            </div>
-
-            <div id="history-view" class="view-section" style="display: none;">
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3 class="chart-title">Manage Our History</h3>
-                    </div>
-                    <form id="add-history-form" style="margin-bottom: 2rem; background: var(--light); padding: 1rem; border-radius: 8px;">
-                        <h4 style="margin-bottom: 10px;">Add Milestone</h4>
-                        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1rem;">
-                            <input type="text" id="history-year" placeholder="Year (e.g. 2024)" required style="padding: 8px; border: 1px solid var(--border); border-radius: 4px;">
-                            <input type="text" id="history-title" placeholder="Milestone Title" required style="padding: 8px; border: 1px solid var(--border); border-radius: 4px;">
-                            <textarea id="history-desc" placeholder="Description" required style="grid-column: span 2; padding: 8px; border: 1px solid var(--border); border-radius: 4px;"></textarea>
-                        </div>
-                        <button type="submit" style="margin-top: 1rem; background: var(--secondary); color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Add Milestone</button>
-                    </form>
-                    <div style="overflow-x: auto;">
-                        <table style="width: 100%; border-collapse: collapse;">
-                            <thead>
-                                <tr style="text-align: left; border-bottom: 2px solid var(--border);">
-                                    <th style="padding: 12px;">Year</th>
-                                    <th style="padding: 12px;">Title</th>
-                                    <th style="padding: 12px;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="history-table-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div id="team-view" class="view-section" style="display: none;">
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3 class="chart-title">Manage Team Members</h3>
-                    </div>
-                    <form id="add-team-form" style="margin-bottom: 2rem; background: var(--light); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border);">
-                        <h4 style="margin-bottom: 15px; color: var(--primary);">Add/Edit Member</h4>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                            <input type="text" id="team-name" placeholder="Full Name" required style="padding: 10px; border: 1px solid var(--border); border-radius: 6px;">
-                            <input type="text" id="team-role" placeholder="Role (e.g. President)" required style="padding: 10px; border: 1px solid var(--border); border-radius: 6px;">
-                            <input type="text" id="team-dept" placeholder="Department/School" required style="padding: 10px; border: 1px solid var(--border); border-radius: 6px;">
-                            <input type="text" id="team-image" placeholder="Image URL" required style="padding: 10px; border: 1px solid var(--border); border-radius: 6px;">
-                            <input type="text" id="team-phone" placeholder="Phone" style="padding: 10px; border: 1px solid var(--border); border-radius: 6px;">
-                            <input type="email" id="team-email" placeholder="Email" style="padding: 10px; border: 1px solid var(--border); border-radius: 6px;">
-                        </div>
-                        <div style="margin-top: 1rem; display: flex; gap: 10px;">
-                            <button type="submit" style="background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">Save Member</button>
-                            <button type="button" onclick="resetTeamForm()" style="background: var(--gray); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">Cancel</button>
-                        </div>
-                    </form>
-                    
-                    <div id="admin-team-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
-                        <!-- Team Cards will be injected here -->
-                    </div>
-                </div>
-            </div>
-
-            <div id="events-view" class="view-section" style="display: none;">
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3 class="chart-title">Manage Events</h3>
-                    </div>
-                    <form id="add-event-form" style="margin-bottom: 2rem; background: var(--light); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border);">
-                        <h4 style="margin-bottom: 15px; color: var(--primary);">Add/Edit Event</h4>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                            <input type="text" id="event-title" placeholder="Event Title" required style="padding: 10px; border: 1px solid var(--border); border-radius: 6px;">
-                            <input type="text" id="event-date" placeholder="Date (e.g. OCT 05)" required style="padding: 10px; border: 1px solid var(--border); border-radius: 6px;">
-                            <input type="text" id="event-location" placeholder="Location" required style="padding: 10px; border: 1px solid var(--border); border-radius: 6px;">
-                            <select id="event-status" style="padding: 10px; border: 1px solid var(--border); border-radius: 6px;">
-                                <option value="Upcoming">Upcoming</option>
-                                <option value="Completed">Completed</option>
-                            </select>
-                            <input type="text" id="event-image" placeholder="Image URL" style="padding: 10px; border: 1px solid var(--border); border-radius: 6px;">
-                        </div>
-                        <textarea id="event-desc" placeholder="Short Description" style="width: 100%; margin-top: 1rem; padding: 10px; border: 1px solid var(--border); border-radius: 6px; height: 80px;"></textarea>
-                        <div style="margin-top: 1rem; display: flex; gap: 10px;">
-                            <button type="submit" style="background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">Save Event</button>
-                            <button type="button" onclick="resetEventForm()" style="background: var(--gray); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">Cancel</button>
-                        </div>
-                    </form>
-
-                    <div id="admin-events-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
-                        <!-- Event Cards will be injected here -->
-                    </div>
-                </div>
-            </div>
-
-            <div id="donations-view" class="view-section" style="display: none;">
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3 class="chart-title">Recent Donations</h3>
-                    </div>
-                    <div style="overflow-x: auto;">
-                        <table style="width: 100%; border-collapse: collapse;">
-                            <thead>
-                                <tr style="text-align: left; border-bottom: 2px solid var(--border);">
-                                    <th style="padding: 12px;">Donor</th>
-                                    <th style="padding: 12px;">Amount</th>
-                                    <th style="padding: 12px;">Method</th>
-                                    <th style="padding: 12px;">Date</th>
-                                </tr>
-                            </thead>
-                            <tbody id="donations-table-body">
-                                <tr>
-                                    <td style="padding: 12px;">John Doe</td>
-                                    <td style="padding: 12px;">5,000 RWF</td>
-                                    <td style="padding: 12px;">Momo</td>
-                                    <td style="padding: 12px;">Jan 12, 2026</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 12px;">Jane Smith</td>
-                                    <td style="padding: 12px;">10,000 RWF</td>
-                                    <td style="padding: 12px;">Momo</td>
-                                    <td style="padding: 12px;">Jan 10, 2026</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div id="testimonials-view" class="view-section" style="display: none;">
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3 class="chart-title">Manage Testimonials</h3>
-                    </div>
-                    <form id="add-testi-form" style="margin-bottom: 2rem; background: var(--light); padding: 1rem; border-radius: 8px;">
-                        <h4 style="margin-bottom: 10px;">Add New Testimonial</h4>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                            <input type="text" id="testi-name" placeholder="Author Name" required style="padding: 8px; border: 1px solid var(--border); border-radius: 4px;">
-                            <input type="text" id="testi-role" placeholder="Author Role" required style="padding: 8px; border: 1px solid var(--border); border-radius: 4px;">
-                            <input type="text" id="testi-image" placeholder="Image Path" style="padding: 8px; border: 1px solid var(--border); border-radius: 4px;">
-                            <textarea id="testi-text" placeholder="Testimonial Quote" required style="grid-column: span 2; padding: 8px; border: 1px solid var(--border); border-radius: 4px;"></textarea>
-                        </div>
-                        <button type="submit" style="margin-top: 1rem; background: var(--secondary); color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Add Testimonial</button>
-                    </form>
-                    <div style="overflow-x: auto;">
-                        <table style="width: 100%; border-collapse: collapse;">
-                            <thead>
-                                <tr style="text-align: left; border-bottom: 2px solid var(--border);">
-                                    <th style="padding: 12px;">Name</th>
-                                    <th style="padding: 12px;">Quote</th>
-                                    <th style="padding: 12px;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="testi-table-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-        </main>
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+    <div class="topbar">
+      <h1 id="section-title">General Settings</h1>
+      <div class="topbar-actions">
+        <button class="btn btn-success" onclick="saveAllChanges()"><i class="fas fa-save"></i> Save All</button>
+        <button class="btn btn-secondary" onclick="resetToDefaults()"><i class="fas fa-undo"></i> Reset</button>
+      </div>
     </div>
 
-    <script>
-        // Security Check
-        if (localStorage.getItem('ecostay_admin') !== 'true') {
-            window.location.href = 'index.html';
-        }
+    <!-- GENERAL TAB -->
+    <div id="general" class="tab-content active">
+      <h2>Section Visibility</h2>
+      <div class="card">
+        <div class="form-group">
+          <label class="visibility-toggle">
+            <span>Navbar</span>
+            <div class="toggle-switch active" id="toggle-navbar" onclick="toggleVisibility(this)">
+              <div class="toggle-slider"></div>
+            </div>
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="visibility-toggle">
+            <span>Hero</span>
+            <div class="toggle-switch active" id="toggle-hero" onclick="toggleVisibility(this)">
+              <div class="toggle-slider"></div>
+            </div>
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="visibility-toggle">
+            <span>Mission</span>
+            <div class="toggle-switch active" id="toggle-mission" onclick="toggleVisibility(this)">
+              <div class="toggle-slider"></div>
+            </div>
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="visibility-toggle">
+            <span>Impact</span>
+            <div class="toggle-switch active" id="toggle-impact" onclick="toggleVisibility(this)">
+              <div class="toggle-slider"></div>
+            </div>
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="visibility-toggle">
+            <span>Team</span>
+            <div class="toggle-switch active" id="toggle-team" onclick="toggleVisibility(this)">
+              <div class="toggle-slider"></div>
+            </div>
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="visibility-toggle">
+            <span>Testimonials</span>
+            <div class="toggle-switch active" id="toggle-testimonials" onclick="toggleVisibility(this)">
+              <div class="toggle-slider"></div>
+            </div>
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="visibility-toggle">
+            <span>Events</span>
+            <div class="toggle-switch active" id="toggle-events" onclick="toggleVisibility(this)">
+              <div class="toggle-slider"></div>
+            </div>
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="visibility-toggle">
+            <span>Footer</span>
+            <div class="toggle-switch active" id="toggle-footer" onclick="toggleVisibility(this)">
+              <div class="toggle-slider"></div>
+            </div>
+          </label>
+        </div>
+      </div>
+    </div>
 
-        function logoutAdmin() {
-            localStorage.removeItem('ecostay_admin');
-            window.location.href = 'index.html';
-        }
+    <!-- HERO TAB -->
+    <div id="hero" class="tab-content">
+      <h2>Hero Section</h2>
+      <div class="card">
+        <div class="form-group">
+          <label>Headline</label>
+          <input type="text" id="heroHeadline" placeholder="Enter hero headline">
+        </div>
+        <div class="form-group">
+          <label>Subheading</label>
+          <textarea id="heroSubheading" placeholder="Enter hero subheading"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>CTA Button Text</label>
+            <input type="text" id="heroCtaText" placeholder="Button text">
+          </div>
+          <div class="form-group">
+            <label>CTA Button Link</label>
+            <input type="text" id="heroCtaLink" placeholder="#events">
+          </div>
+        </div>
+      </div>
+    </div>
 
-        // Data Management
-        let editTeamIndex = -1;
-        let editEventIndex = -1;
-        let editTestiIndex = -1;
-        let editHistoryIndex = -1;
+    <!-- MISSION TAB -->
+    <div id="mission" class="tab-content">
+      <h2>Mission & Vision</h2>
+      <div class="card">
+        <div class="form-group">
+          <label>Section Title</label>
+          <input type="text" id="missionTitle" placeholder="Our Mission & Vision">
+        </div>
+        <div class="form-group">
+          <label>Subtitle</label>
+          <input type="text" id="missionSubtitle" placeholder="Subtitle">
+        </div>
+        <div class="form-group">
+          <label>Mission Text</label>
+          <textarea id="missionText" placeholder="Our mission..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Vision Text</label>
+          <textarea id="visionText" placeholder="Our vision..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Who We Are</label>
+          <textarea id="whoWeAre" placeholder="Description..."></textarea>
+        </div>
+      </div>
+    </div>
 
-        function getSiteData() {
-            return JSON.parse(localStorage.getItem('ecostay_site_data')) || {};
-        }
+    <!-- IMPACT TAB -->
+    <div id="impact" class="tab-content">
+      <h2>Impact Statistics</h2>
+      <div class="card">
+        <div class="form-group">
+          <label>Trees Planted</label>
+          <input type="number" id="impactTrees" placeholder="1240">
+        </div>
+        <div class="form-group">
+          <label>Carbon Reduced (kg)</label>
+          <input type="number" id="impactCarbon" placeholder="31000">
+        </div>
+        <div class="form-group">
+          <label>Active Members</label>
+          <input type="number" id="impactMembers" placeholder="450">
+        </div>
+      </div>
+    </div>
 
-        function getUsers() {
-            return JSON.parse(localStorage.getItem('ecostay_users') || '[]');
-        }
+    <!-- TEAM TAB -->
+    <div id="team" class="tab-content">
+      <h2>Team Members</h2>
+      <button class="btn btn-primary" onclick="openTeamModal()" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Add Member</button>
+      <div id="team-members-list" class="item-list"></div>
+    </div>
 
-        function switchView(viewId, event) {
-            const viewElement = document.getElementById(viewId + '-view');
-            if (!viewElement) {
-                console.warn(`View ${viewId}-view not found.`);
-                // Fallback to dashboard if view doesn't exist
-                if (viewId !== 'dashboard') switchView('dashboard');
-                return;
-            }
+    <!-- TESTIMONIALS TAB -->
+    <div id="testimonials" class="tab-content">
+      <h2>Testimonials</h2>
+      <button class="btn btn-primary" onclick="openTestimonialModal()" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Add Testimonial</button>
+      <div id="testimonials-list" class="item-list"></div>
+    </div>
 
-            document.querySelectorAll('.view-section').forEach(section => {
-                section.style.display = 'none';
-            });
-            viewElement.style.display = 'block';
+    <!-- EVENTS TAB -->
+    <div id="events" class="tab-content">
+      <h2>Events</h2>
+      <button class="btn btn-primary" onclick="openEventModal()" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Add Event</button>
+      <div id="events-list" class="item-list"></div>
+    </div>
 
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            
-            // Set active link
-            if (event && event.currentTarget) {
-                event.currentTarget.classList.add('active');
-            } else {
-                // Try to find the link by viewId if event is missing
-                const links = document.querySelectorAll('.nav-link');
-                links.forEach(link => {
-                    if (link.getAttribute('onclick') && link.getAttribute('onclick').includes(`'${viewId}'`)) {
-                        link.classList.add('active');
-                    }
-                });
-            }
+    <!-- HISTORY TAB -->
+    <div id="history" class="tab-content">
+      <h2>History / Timeline</h2>
+      <div class="card" style="margin-bottom: 20px;">
+        <div class="form-group">
+          <label>Section Title</label>
+          <input type="text" id="historyTitle" placeholder="Our Journey">
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="openHistoryModal()" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Add Milestone</button>
+      <div id="history-list" class="item-list"></div>
+    </div>
 
-            // Load data for specific views
-            if (viewId === 'dashboard') loadAdminStats();
-            if (viewId === 'members') loadMembers();
-            if (viewId === 'content') loadContentForm();
-            if (viewId === 'team') loadTeamList();
-            if (viewId === 'history') loadHistoryList();
-            if (viewId === 'events') loadEventsList();
-            if (viewId === 'donations') loadDonationsList();
-            if (viewId === 'testimonials') loadTestimonialsList();
+    <!-- THEME TAB -->
+    <div id="theme" class="tab-content">
+      <h2>Color Theme</h2>
+      <div class="card">
+        <div class="form-group">
+          <label>Primary Color</label>
+          <input type="color" id="colorPrimary" onchange="updateTheme()">
+          <input type="text" id="colorPrimaryHex" placeholder="#1A4D2E" style="margin-top: 10px;" onchange="updateTheme()">
+        </div>
+        <div class="form-group">
+          <label>Secondary Color</label>
+          <input type="color" id="colorSecondary" onchange="updateTheme()">
+          <input type="text" id="colorSecondaryHex" placeholder="#4F6F52" style="margin-top: 10px;" onchange="updateTheme()">
+        </div>
+        <div class="form-group">
+          <label>Accent Color</label>
+          <input type="color" id="colorAccent" onchange="updateTheme()">
+          <input type="text" id="colorAccentHex" placeholder="#FF9F1C" style="margin-top: 10px;" onchange="updateTheme()">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-            // Update page title
-            const title = document.querySelector('.page-title h1');
-            if (title) {
-                if (viewId === 'dashboard') {
-                    title.innerText = 'Dashboard';
-                } else {
-                    const navLink = document.querySelector(`.nav-link[onclick*="'${viewId}'"]`);
-                    if (navLink) {
-                        title.innerText = navLink.querySelector('span').innerText;
-                    }
-                }
-            }
-        }
+<!-- MODALS -->
+<div id="teamModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+  <div style="background:white; padding:30px; border-radius:12px; width:90%; max-width:500px; max-height:80vh; overflow-y:auto;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid #e0e0e0; padding-bottom:15px;">
+      <h2>Team Member</h2>
+      <button onclick="closeModal('teamModal')" style="background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
+    </div>
+    <form onsubmit="saveTeamMember(event)">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" id="teamName" required>
+      </div>
+      <div class="form-group">
+        <label>Role</label>
+        <input type="text" id="teamRole" required>
+      </div>
+      <div class="form-group">
+        <label>Department</label>
+        <input type="text" id="teamDept" required>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="teamEmail" required>
+      </div>
+      <div class="form-group">
+        <label>Phone</label>
+        <input type="tel" id="teamPhone" required>
+      </div>
+      <div class="form-group">
+        <label>Image URL</label>
+        <input type="text" id="teamImage" required>
+      </div>
+      <button type="submit" class="btn btn-success" style="width:100%; margin-top:20px;">Save</button>
+    </form>
+  </div>
+</div>
 
-        function loadHistoryList() {
-            const data = getSiteData();
-            const tbody = document.getElementById('history-table-body');
-            tbody.innerHTML = '';
-            (data.history || []).forEach((item, index) => {
-                const tr = document.createElement('tr');
-                tr.style.borderBottom = '1px solid var(--light-gray)';
-                tr.innerHTML = `
-                    <td style="padding: 12px;">${item.year}</td>
-                    <td style="padding: 12px;">${item.title}</td>
-                    <td style="padding: 12px;">
-                        <button onclick="editHistory(${index})" style="background: none; border: none; color: var(--primary); cursor: pointer; margin-right: 10px;"><i class="fas fa-edit"></i></button>
-                        <button onclick="deleteHistory(${index})" style="background: none; border: none; color: #e74a3b; cursor: pointer;"><i class="fas fa-trash"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
+<div id="testimonialModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+  <div style="background:white; padding:30px; border-radius:12px; width:90%; max-width:500px; max-height:80vh; overflow-y:auto;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid #e0e0e0; padding-bottom:15px;">
+      <h2>Testimonial</h2>
+      <button onclick="closeModal('testimonialModal')" style="background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
+    </div>
+    <form onsubmit="saveTestimonial(event)">
+      <div class="form-group">
+        <label>Quote</label>
+        <textarea id="testiText" required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Author</label>
+        <input type="text" id="testiAuthor" required>
+      </div>
+      <div class="form-group">
+        <label>Role</label>
+        <input type="text" id="testiRole" required>
+      </div>
+      <div class="form-group">
+        <label>Image URL</label>
+        <input type="text" id="testiImage" required>
+      </div>
+      <button type="submit" class="btn btn-success" style="width:100%; margin-top:20px;">Save</button>
+    </form>
+  </div>
+</div>
 
-        function editHistory(index) {
-            const data = getSiteData();
-            const item = data.history[index];
-            editHistoryIndex = index;
-            document.getElementById('history-year').value = item.year;
-            document.getElementById('history-title').value = item.title;
-            document.getElementById('history-desc').value = item.desc;
-            document.querySelector('#add-history-form h4').innerText = 'Edit Milestone';
-            document.querySelector('#add-history-form button').innerText = 'Update Milestone';
-        }
+<div id="eventModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+  <div style="background:white; padding:30px; border-radius:12px; width:90%; max-width:500px; max-height:80vh; overflow-y:auto;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid #e0e0e0; padding-bottom:15px;">
+      <h2>Event</h2>
+      <button onclick="closeModal('eventModal')" style="background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
+    </div>
+    <form onsubmit="saveEvent(event)">
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="eventTitle" required>
+      </div>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="text" id="eventDate" placeholder="e.g., OCT 05, 2026" required>
+      </div>
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" id="eventLocation" required>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="eventDesc" required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="eventStatus" required>
+          <option value="Upcoming">Upcoming</option>
+          <option value="Completed">Completed</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Image URL</label>
+        <input type="text" id="eventImage" required>
+      </div>
+      <button type="submit" class="btn btn-success" style="width:100%; margin-top:20px;">Save</button>
+    </form>
+  </div>
+</div>
 
-        function deleteHistory(index) {
-            if (confirm('Delete this history milestone?')) {
-                const data = getSiteData();
-                data.history.splice(index, 1);
-                localStorage.setItem('ecostay_site_data', JSON.stringify(data));
-                loadHistoryList();
-            }
-        }
+<div id="historyModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+  <div style="background:white; padding:30px; border-radius:12px; width:90%; max-width:500px; max-height:80vh; overflow-y:auto;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid #e0e0e0; padding-bottom:15px;">
+      <h2>Milestone</h2>
+      <button onclick="closeModal('historyModal')" style="background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
+    </div>
+    <form onsubmit="saveHistoryItem(event)">
+      <div class="form-group">
+        <label>Year</label>
+        <input type="text" id="histYear" placeholder="e.g., 2024" required>
+      </div>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="histTitle" required>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="histDesc" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-success" style="width:100%; margin-top:20px;">Save</button>
+    </form>
+  </div>
+</div>
 
-        document.getElementById('add-history-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const data = getSiteData();
-            const historyData = {
-                year: document.getElementById('history-year').value,
-                title: document.getElementById('history-title').value,
-                desc: document.getElementById('history-desc').value
-            };
+<script type="module" src="/script-firebase.js"></script>
+<script type="module">
+let currentEditingId = null;
 
-            if (!data.history) data.history = [];
+function switchTab(tabName, event) {
+  document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+  document.querySelectorAll('.sidebar-nav button').forEach(btn => btn.classList.remove('active'));
+  
+  document.getElementById(tabName).classList.add('active');
+  if (event && event.target) {
+    // If we clicked the icon instead of the button, get the parent button
+    const btn = event.target.closest('button');
+    if (btn) btn.classList.add('active');
+  }
+  
+  const titles = {
+    general: 'General Settings',
+    hero: 'Hero Section',
+    mission: 'Mission & Vision',
+    team: 'Team Management',
+    testimonials: 'Testimonials',
+    events: 'Events Manager',
+    history: 'History & Timeline',
+    impact: 'Impact Statistics',
+    theme: 'Theme Editor'
+  };
+  document.getElementById('section-title').textContent = titles[tabName];
+  
+  loadTabData(tabName);
+}
 
-            if (editHistoryIndex > -1) {
-                data.history[editHistoryIndex] = historyData;
-                editHistoryIndex = -1;
-                alert('Milestone updated!');
-            } else {
-                data.history.push(historyData);
-                alert('Milestone added!');
-            }
+function loadTabData(tabName) {
+  const config = getSiteConfig();
+  
+  if (tabName === 'general') {
+    updateToggle('toggle-navbar', config.navbar.visible);
+    updateToggle('toggle-hero', config.hero.visible);
+    updateToggle('toggle-mission', config.mission.visible);
+    updateToggle('toggle-impact', config.impact.visible);
+    updateToggle('toggle-team', config.team.visible);
+    updateToggle('toggle-testimonials', config.testimonials.visible);
+    updateToggle('toggle-events', config.events.visible);
+    updateToggle('toggle-footer', config.footer.visible);
+  } else if (tabName === 'hero') {
+    document.getElementById('heroHeadline').value = config.hero.headline;
+    document.getElementById('heroSubheading').value = config.hero.subheading;
+    document.getElementById('heroCtaText').value = config.hero.ctaButtonText;
+    document.getElementById('heroCtaLink').value = config.hero.ctaButtonLink;
+  } else if (tabName === 'mission') {
+    document.getElementById('missionTitle').value = config.mission.title;
+    document.getElementById('missionSubtitle').value = config.mission.subtitle;
+    document.getElementById('missionText').value = config.mission.missionText;
+    document.getElementById('visionText').value = config.mission.visionText;
+    document.getElementById('whoWeAre').value = config.mission.whoWeAre;
+  } else if (tabName === 'history') {
+    document.getElementById('historyTitle').value = config.history.title;
+    loadHistoryList(config);
+  } else if (tabName === 'impact') {
+    const trees = config.impact.stats.find(s => s.label.includes('Trees'))?.value || 0;
+    const carbon = config.impact.stats.find(s => s.label.includes('CO'))?.value || 0;
+    const members = config.impact.stats.find(s => s.label.includes('Members'))?.value || 0;
+    document.getElementById('impactTrees').value = trees;
+    document.getElementById('impactCarbon').value = carbon;
+    document.getElementById('impactMembers').value = members;
+  } else if (tabName === 'team') {
+    loadTeamList(config);
+  } else if (tabName === 'testimonials') {
+    loadTestimonialsList(config);
+  } else if (tabName === 'events') {
+    loadEventsList(config);
+  } else if (tabName === 'theme') {
+    document.getElementById('colorPrimary').value = config.theme.primaryColor;
+    document.getElementById('colorPrimaryHex').value = config.theme.primaryColor;
+    document.getElementById('colorSecondary').value = config.theme.secondaryColor;
+    document.getElementById('colorSecondaryHex').value = config.theme.secondaryColor;
+    document.getElementById('colorAccent').value = config.theme.accentColor;
+    document.getElementById('colorAccentHex').value = config.theme.accentColor;
+  }
+}
 
-            localStorage.setItem('ecostay_site_data', JSON.stringify(data));
-            e.target.reset();
-            document.querySelector('#add-history-form h4').innerText = 'Add Milestone';
-            document.querySelector('#add-history-form button').innerText = 'Add Milestone';
-            loadHistoryList();
-        });
+function updateToggle(id, state) {
+  const toggle = document.getElementById(id);
+  if (state) {
+    toggle.classList.add('active');
+  } else {
+    toggle.classList.remove('active');
+  }
+}
 
-        function loadDonationsList() {
-            // Static for now, could be dynamic later
-        }
+function toggleVisibility(element) {
+  element.classList.toggle('active');
+}
 
-        function loadTeamList() {
-            const data = getSiteData();
-            const container = document.getElementById('admin-team-grid');
-            if (!container) return;
-            container.innerHTML = '';
-            (data.team || []).forEach((member, index) => {
-                const card = document.createElement('div');
-                card.className = 'chart-card';
-                card.style.padding = '0';
-                card.style.overflow = 'hidden';
-                card.innerHTML = `
-                    <div style="height: 150px; background-image: url('${member.image}'); background-size: cover; background-position: top;"></div>
-                    <div style="padding: 15px;">
-                        <h4 style="margin: 0; color: var(--text);">${member.name}</h4>
-                        <p style="margin: 5px 0; font-size: 0.85rem; color: var(--primary); font-weight: 600;">${member.role}</p>
-                        <p style="margin: 0; font-size: 0.8rem; color: var(--gray);">${member.dept}</p>
-                        <div style="margin-top: 15px; display: flex; gap: 10px;">
-                            <button onclick="editTeamMember(${index})" style="flex: 1; padding: 8px; background: #e3f2fd; color: #1976d2; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem;"><i class="fas fa-edit"></i> Edit</button>
-                            <button onclick="deleteTeamMember(${index})" style="flex: 1; padding: 8px; background: #ffebee; color: #c62828; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem;"><i class="fas fa-trash"></i> Delete</button>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
+function updateTheme() {
+  const p = document.getElementById('colorPrimary').value;
+  const s = document.getElementById('colorSecondary').value;
+  const a = document.getElementById('colorAccent').value;
+  document.getElementById('colorPrimaryHex').value = p;
+  document.getElementById('colorSecondaryHex').value = s;
+  document.getElementById('colorAccentHex').value = a;
+}
 
-        function resetTeamForm() {
-            editTeamIndex = -1;
-            document.getElementById('add-team-form').reset();
-            document.querySelector('#add-team-form h4').innerText = 'Add New Member';
-            document.querySelector('#add-team-form button[type="submit"]').innerText = 'Add Member';
-        }
+function loadTeamList(config) {
+  let html = '';
+  config.team.members.forEach((member, idx) => {
+    html += `<div class="item-list-item">
+      <div class="item-info">
+        <div class="item-title">${member.name}</div>
+        <div class="item-desc">${member.role} - ${member.department || member.dept || ''}</div>
+      </div>
+      <div class="item-actions">
+        <button class="btn btn-sm btn-outline" onclick="editTeamMember(${idx})"><i class="fas fa-edit"></i></button>
+        <button class="btn btn-sm btn-danger" onclick="deleteTeamMember(${idx})"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`;
+  });
+  document.getElementById('team-members-list').innerHTML = html;
+}
 
-        function editTeamMember(index) {
-            const data = getSiteData();
-            const member = data.team[index];
-            editTeamIndex = index;
-            document.getElementById('team-name').value = member.name;
-            document.getElementById('team-role').value = member.role;
-            document.getElementById('team-dept').value = member.dept;
-            document.getElementById('team-image').value = member.image;
-            document.getElementById('team-phone').value = member.phone || '';
-            document.getElementById('team-email').value = member.email || '';
-            document.querySelector('#add-team-form h4').innerText = 'Edit Member: ' + member.name;
-            document.querySelector('#add-team-form button[type="submit"]').innerText = 'Update Member Info';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+function loadTestimonialsList(config) {
+  let html = '';
+  config.testimonials.items.forEach((item, idx) => {
+    html += `<div class="item-list-item">
+      <div class="item-info">
+        <div class="item-title">"${item.text.substring(0, 50)}..."</div>
+        <div class="item-desc">- ${item.author}</div>
+      </div>
+      <div class="item-actions">
+        <button class="btn btn-sm btn-outline" onclick="editTestimonial(${idx})"><i class="fas fa-edit"></i></button>
+        <button class="btn btn-sm btn-danger" onclick="deleteTestimonial(${idx})"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`;
+  });
+  document.getElementById('testimonials-list').innerHTML = html;
+}
 
-        function deleteTeamMember(index) {
-            if (confirm('Are you sure you want to remove this team member? This update will reflect on the live website immediately.')) {
-                const data = getSiteData();
-                data.team.splice(index, 1);
-                localStorage.setItem('ecostay_site_data', JSON.stringify(data));
-                loadTeamList();
-            }
-        }
+function loadEventsList(config) {
+  let html = '';
+  config.events.items.forEach((event, idx) => {
+    html += `<div class="item-list-item">
+      <div class="item-info">
+        <div class="item-title">${event.title}</div>
+        <div class="item-desc">${event.date} - ${event.location}</div>
+      </div>
+      <div class="item-actions">
+        <button class="btn btn-sm btn-outline" onclick="editEvent(${idx})"><i class="fas fa-edit"></i></button>
+        <button class="btn btn-sm btn-danger" onclick="deleteEvent(${idx})"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`;
+  });
+  document.getElementById('events-list').innerHTML = html;
+}
 
-        document.getElementById('add-team-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const data = getSiteData();
-            const memberData = {
-                name: document.getElementById('team-name').value,
-                role: document.getElementById('team-role').value,
-                dept: document.getElementById('team-dept').value,
-                image: document.getElementById('team-image').value,
-                phone: document.getElementById('team-phone').value,
-                email: document.getElementById('team-email').value
-            };
+function loadHistoryList(config) {
+  let html = '';
+  config.history.items.forEach((item, idx) => {
+    html += `<div class="item-list-item">
+      <div class="item-info">
+        <div class="item-title">${item.year}: ${item.title}</div>
+        <div class="item-desc">${item.description || item.desc || ''}</div>
+      </div>
+      <div class="item-actions">
+        <button class="btn btn-sm btn-outline" onclick="editHistoryItem(${idx})"><i class="fas fa-edit"></i></button>
+        <button class="btn btn-sm btn-danger" onclick="deleteHistoryItem(${idx})"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`;
+  });
+  document.getElementById('history-list').innerHTML = html;
+}
 
-            if (editTeamIndex > -1) {
-                data.team[editTeamIndex] = memberData;
-                editTeamIndex = -1;
-            } else {
-                data.team.push(memberData);
-            }
+function openTeamModal() {
+  currentEditingId = null;
+  document.getElementById('teamName').value = '';
+  document.getElementById('teamRole').value = '';
+  document.getElementById('teamDept').value = '';
+  document.getElementById('teamEmail').value = '';
+  document.getElementById('teamPhone').value = '';
+  document.getElementById('teamImage').value = '';
+  document.getElementById('teamModal').style.display = 'flex';
+}
 
-            localStorage.setItem('ecostay_site_data', JSON.stringify(data));
-            resetTeamForm();
-            loadTeamList();
-            alert('Website updated successfully!');
-        });
+function editTeamMember(idx) {
+  const config = getSiteConfig();
+  const member = config.team.members[idx];
+  currentEditingId = idx;
+  document.getElementById('teamName').value = member.name;
+  document.getElementById('teamRole').value = member.role;
+  document.getElementById('teamDept').value = member.department || member.dept || '';
+  document.getElementById('teamEmail').value = member.email;
+  document.getElementById('teamPhone').value = member.phone;
+  document.getElementById('teamImage').value = member.image;
+  document.getElementById('teamModal').style.display = 'flex';
+}
 
-        function loadEventsList() {
-            const data = getSiteData();
-            const container = document.getElementById('admin-events-grid');
-            if (!container) return;
-            container.innerHTML = '';
-            (data.events || []).forEach((ev, index) => {
-                const card = document.createElement('div');
-                card.className = 'chart-card';
-                card.style.padding = '0';
-                card.style.overflow = 'hidden';
-                card.innerHTML = `
-                    <div style="height: 120px; background-image: url('${ev.image || 'img/event-placeholder.jpg'}'); background-size: cover; background-position: center;">
-                        <div style="padding: 5px 10px; background: ${ev.status === 'Completed' ? '#2e7d32' : '#1976d2'}; color: white; display: inline-block; font-size: 0.7rem; font-weight: bold;">${ev.status}</div>
-                    </div>
-                    <div style="padding: 15px;">
-                        <h4 style="margin: 0; font-size: 1rem;">${ev.title}</h4>
-                        <p style="margin: 5px 0; font-size: 0.8rem; color: var(--gray);"><i class="fas fa-calendar-day"></i> ${ev.date} | <i class="fas fa-map-marker-alt"></i> ${ev.location}</p>
-                        <div style="margin-top: 15px; display: flex; gap: 10px;">
-                            <button onclick="editEvent(${index})" style="flex: 1; padding: 8px; background: #e3f2fd; color: #1976d2; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem;"><i class="fas fa-edit"></i> Edit</button>
-                            <button onclick="deleteEvent(${index})" style="flex: 1; padding: 8px; background: #ffebee; color: #c62828; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem;"><i class="fas fa-trash"></i> Delete</button>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
+function deleteTeamMember(idx) {
+  if (confirm('Delete this team member?')) {
+    const config = getSiteConfig();
+    config.team.members.splice(idx, 1);
+    saveSiteConfig(config);
+    loadTeamList(config);
+  }
+}
 
-        function resetEventForm() {
-            editEventIndex = -1;
-            document.getElementById('add-event-form').reset();
-            document.querySelector('#add-event-form h4').innerText = 'Add New Event';
-            document.querySelector('#add-event-form button[type="submit"]').innerText = 'Add Event';
-        }
+function saveTeamMember(e) {
+  e.preventDefault();
+  const config = getSiteConfig();
+  const member = {
+    id: currentEditingId !== null ? config.team.members[currentEditingId].id : Date.now(),
+    name: document.getElementById('teamName').value,
+    role: document.getElementById('teamRole').value,
+    department: document.getElementById('teamDept').value,
+    email: document.getElementById('teamEmail').value,
+    phone: document.getElementById('teamPhone').value,
+    image: document.getElementById('teamImage').value,
+    visible: true
+  };
+  
+  if (currentEditingId !== null) {
+    config.team.members[currentEditingId] = member;
+  } else {
+    config.team.members.push(member);
+  }
+  saveSiteConfig(config);
+  loadTeamList(config);
+  closeModal('teamModal');
+}
 
-        function editEvent(index) {
-            const data = getSiteData();
-            const ev = data.events[index];
-            editEventIndex = index;
-            document.getElementById('event-title').value = ev.title;
-            document.getElementById('event-date').value = ev.date;
-            document.getElementById('event-location').value = ev.location;
-            document.getElementById('event-status').value = ev.status;
-            document.getElementById('event-image').value = ev.image || '';
-            document.getElementById('event-desc').value = ev.desc || '';
-            document.querySelector('#add-event-form h4').innerText = 'Edit Event: ' + ev.title;
-            document.querySelector('#add-event-form button[type="submit"]').innerText = 'Update Event Info';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+function openTestimonialModal() {
+  currentEditingId = null;
+  document.getElementById('testiText').value = '';
+  document.getElementById('testiAuthor').value = '';
+  document.getElementById('testiRole').value = '';
+  document.getElementById('testiImage').value = '';
+  document.getElementById('testimonialModal').style.display = 'flex';
+}
 
-        function deleteEvent(index) {
-            if (confirm('Delete this event? It will be removed from the public website.')) {
-                const data = getSiteData();
-                data.events.splice(index, 1);
-                localStorage.setItem('ecostay_site_data', JSON.stringify(data));
-                loadEventsList();
-            }
-        }
+function editTestimonial(idx) {
+  const config = getSiteConfig();
+  const testi = config.testimonials.items[idx];
+  currentEditingId = idx;
+  document.getElementById('testiText').value = testi.text;
+  document.getElementById('testiAuthor').value = testi.author;
+  document.getElementById('testiRole').value = testi.role;
+  document.getElementById('testiImage').value = testi.image;
+  document.getElementById('testimonialModal').style.display = 'flex';
+}
 
-        document.getElementById('add-event-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const data = getSiteData();
-            const eventData = {
-                title: document.getElementById('event-title').value,
-                date: document.getElementById('event-date').value,
-                location: document.getElementById('event-location').value,
-                status: document.getElementById('event-status').value,
-                image: document.getElementById('event-image').value,
-                desc: document.getElementById('event-desc').value
-            };
+function deleteTestimonial(idx) {
+  if (confirm('Delete this testimonial?')) {
+    const config = getSiteConfig();
+    config.testimonials.items.splice(idx, 1);
+    saveSiteConfig(config);
+    loadTestimonialsList(config);
+  }
+}
 
-            if (editEventIndex > -1) {
-                data.events[editEventIndex] = eventData;
-                editEventIndex = -1;
-            } else {
-                data.events.push(eventData);
-            }
+function saveTestimonial(e) {
+  e.preventDefault();
+  const config = getSiteConfig();
+  const testi = {
+    id: currentEditingId !== null ? config.testimonials.items[currentEditingId].id : Date.now(),
+    text: document.getElementById('testiText').value,
+    author: document.getElementById('testiAuthor').value,
+    role: document.getElementById('testiRole').value,
+    image: document.getElementById('testiImage').value,
+    visible: true
+  };
+  
+  if (currentEditingId !== null) {
+    config.testimonials.items[currentEditingId] = testi;
+  } else {
+    config.testimonials.items.push(testi);
+  }
+  saveSiteConfig(config);
+  loadTestimonialsList(config);
+  closeModal('testimonialModal');
+}
 
-            localStorage.setItem('ecostay_site_data', JSON.stringify(data));
-            resetEventForm();
-            loadEventsList();
-            alert('Event list updated!');
-        });
+function openEventModal() {
+  currentEditingId = null;
+  document.getElementById('eventTitle').value = '';
+  document.getElementById('eventDate').value = '';
+  document.getElementById('eventLocation').value = '';
+  document.getElementById('eventDesc').value = '';
+  document.getElementById('eventStatus').value = 'Upcoming';
+  document.getElementById('eventImage').value = '';
+  document.getElementById('eventModal').style.display = 'flex';
+}
 
-        function loadTestimonialsList() {
-            const data = getSiteData();
-            const tbody = document.getElementById('testi-table-body');
-            tbody.innerHTML = '';
-            (data.testimonials || []).forEach((testi, index) => {
-                const tr = document.createElement('tr');
-                tr.style.borderBottom = '1px solid var(--light-gray)';
-                tr.innerHTML = `
-                    <td style="padding: 12px;">${testi.name}</td>
-                    <td style="padding: 12px; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${testi.text}</td>
-                    <td style="padding: 12px;">
-                        <button onclick="editTesti(${index})" style="background: none; border: none; color: var(--primary); cursor: pointer; margin-right: 10px;"><i class="fas fa-edit"></i></button>
-                        <button onclick="deleteTesti(${index})" style="background: none; border: none; color: #e74a3b; cursor: pointer;"><i class="fas fa-trash"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
+function editEvent(idx) {
+  const config = getSiteConfig();
+  const event = config.events.items[idx];
+  currentEditingId = idx;
+  document.getElementById('eventTitle').value = event.title;
+  document.getElementById('eventDate').value = event.date;
+  document.getElementById('eventLocation').value = event.location;
+  document.getElementById('eventDesc').value = event.description;
+  document.getElementById('eventStatus').value = event.status;
+  document.getElementById('eventImage').value = event.image;
+  document.getElementById('eventModal').style.display = 'flex';
+}
 
-        function editTesti(index) {
-            const data = getSiteData();
-            const t = data.testimonials[index];
-            editTestiIndex = index;
-            document.getElementById('testi-name').value = t.name;
-            document.getElementById('testi-role').value = t.role;
-            document.getElementById('testi-image').value = t.image || '';
-            document.getElementById('testi-text').value = t.text;
-            document.querySelector('#add-testi-form h4').innerText = 'Edit Testimonial';
-            document.querySelector('#add-testi-form button').innerText = 'Update Testimonial';
-        }
+function deleteEvent(idx) {
+  if (confirm('Delete this event?')) {
+    const config = getSiteConfig();
+    config.events.items.splice(idx, 1);
+    saveSiteConfig(config);
+    loadEventsList(config);
+  }
+}
 
-        function deleteTesti(index) {
-            if (confirm('Delete this testimonial?')) {
-                const data = getSiteData();
-                data.testimonials.splice(index, 1);
-                localStorage.setItem('ecostay_site_data', JSON.stringify(data));
-                loadTestimonialsList();
-            }
-        }
+function saveEvent(e) {
+  e.preventDefault();
+  const config = getSiteConfig();
+  const event = {
+    id: currentEditingId !== null ? config.events.items[currentEditingId].id : Date.now(),
+    title: document.getElementById('eventTitle').value,
+    date: document.getElementById('eventDate').value,
+    location: document.getElementById('eventLocation').value,
+    description: document.getElementById('eventDesc').value,
+    status: document.getElementById('eventStatus').value,
+    image: document.getElementById('eventImage').value,
+    impact: '',
+    visible: true
+  };
+  
+  if (currentEditingId !== null) {
+    config.events.items[currentEditingId] = event;
+  } else {
+    config.events.items.push(event);
+  }
+  saveSiteConfig(config);
+  loadEventsList(config);
+  closeModal('eventModal');
+}
 
-        document.getElementById('add-testi-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const data = getSiteData();
-            const testiData = {
-                name: document.getElementById('testi-name').value,
-                role: document.getElementById('testi-role').value,
-                image: document.getElementById('testi-image').value,
-                text: document.getElementById('testi-text').value
-            };
+function openHistoryModal() {
+  currentEditingId = null;
+  document.getElementById('histYear').value = '';
+  document.getElementById('histTitle').value = '';
+  document.getElementById('histDesc').value = '';
+  document.getElementById('historyModal').style.display = 'flex';
+}
 
-            if (editTestiIndex > -1) {
-                data.testimonials[editTestiIndex] = testiData;
-                editTestiIndex = -1;
-                alert('Testimonial updated!');
-            } else {
-                data.testimonials.push(testiData);
-                alert('Testimonial added!');
-            }
+function editHistoryItem(idx) {
+  const config = getSiteConfig();
+  const item = config.history.items[idx];
+  currentEditingId = idx;
+  document.getElementById('histYear').value = item.year;
+  document.getElementById('histTitle').value = item.title;
+  document.getElementById('histDesc').value = item.description || item.desc || '';
+  document.getElementById('historyModal').style.display = 'flex';
+}
 
-            localStorage.setItem('ecostay_site_data', JSON.stringify(data));
-            e.target.reset();
-            document.querySelector('#add-testi-form h4').innerText = 'Add New Testimonial';
-            document.querySelector('#add-testi-form button').innerText = 'Add Testimonial';
-            loadTestimonialsList();
-        });
+function deleteHistoryItem(idx) {
+  if (confirm('Delete this milestone?')) {
+    const config = getSiteConfig();
+    config.history.items.splice(idx, 1);
+    saveSiteConfig(config);
+    loadHistoryList(config);
+  }
+}
 
-        function loadAdminStats() {
-            const data = getSiteData();
-            const users = getUsers();
-            
-            document.getElementById('admin-stat-members').innerText = users.length;
-            document.getElementById('admin-stat-trees').innerText = data.impact.trees.toLocaleString();
-        }
+function saveHistoryItem(e) {
+  e.preventDefault();
+  const config = getSiteConfig();
+  const item = {
+    id: currentEditingId !== null ? config.history.items[currentEditingId].id : Date.now(),
+    year: document.getElementById('histYear').value,
+    title: document.getElementById('histTitle').value,
+    description: document.getElementById('histDesc').value
+  };
+  
+  if (currentEditingId !== null) {
+    config.history.items[currentEditingId] = item;
+  } else {
+    config.history.items.push(item);
+  }
+  saveSiteConfig(config);
+  loadHistoryList(config);
+  closeModal('historyModal');
+}
 
-        function loadMembers() {
-            const users = getUsers();
-            const tbody = document.getElementById('members-table-body');
-            tbody.innerHTML = '';
+function closeModal(modalId) {
+  document.getElementById(modalId).style.display = 'none';
+}
 
-            users.forEach((user, index) => {
-                const tr = document.createElement('tr');
-                tr.style.borderBottom = '1px solid var(--light-gray)';
-                tr.innerHTML = `
-                    <td style="padding: 12px;">${user.name}</td>
-                    <td style="padding: 12px;">${user.email}</td>
-                    <td style="padding: 12px;"><span style="padding: 4px 8px; background: #e3f2fd; color: #1976d2; border-radius: 4px; font-size: 0.8rem;">${user.is_member ? 'Member' : 'User'}</span></td>
-                    <td style="padding: 12px;">
-                        <button onclick="deleteUser(${index})" style="background: none; border: none; color: #e74a3b; cursor: pointer;"><i class="fas fa-trash"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
+async function saveAllChanges() {
+  const config = getSiteConfig();
+  
+  config.hero.headline = document.getElementById('heroHeadline').value;
+  config.hero.subheading = document.getElementById('heroSubheading').value;
+  config.hero.ctaButtonText = document.getElementById('heroCtaText').value;
+  config.hero.ctaButtonLink = document.getElementById('heroCtaLink').value;
+  
+  config.mission.title = document.getElementById('missionTitle').value;
+  config.mission.subtitle = document.getElementById('missionSubtitle').value;
+  config.mission.missionText = document.getElementById('missionText').value;
+  config.mission.visionText = document.getElementById('visionText').value;
+  config.mission.whoWeAre = document.getElementById('whoWeAre').value;
+  
+  config.history.title = document.getElementById('historyTitle').value;
+  
+  config.impact.stats = [
+    { label: "Trees Planted", value: parseInt(document.getElementById('impactTrees').value) || 0, icon: "fa-tree" },
+    { label: "CO₂ Offset (kg)", value: parseInt(document.getElementById('impactCarbon').value) || 0, icon: "fa-leaf" },
+    { label: "Active Members", value: parseInt(document.getElementById('impactMembers').value) || 0, icon: "fa-users" }
+  ];
+  
+  config.navbar.visible = document.getElementById('toggle-navbar').classList.contains('active');
+  config.hero.visible = document.getElementById('toggle-hero').classList.contains('active');
+  config.mission.visible = document.getElementById('toggle-mission').classList.contains('active');
+  config.impact.visible = document.getElementById('toggle-impact').classList.contains('active');
+  config.team.visible = document.getElementById('toggle-team').classList.contains('active');
+  config.testimonials.visible = document.getElementById('toggle-testimonials').classList.contains('active');
+  config.events.visible = document.getElementById('toggle-events').classList.contains('active');
+  config.footer.visible = document.getElementById('toggle-footer').classList.contains('active');
+  
+  config.theme.primaryColor = document.getElementById('colorPrimary').value;
+  config.theme.secondaryColor = document.getElementById('colorSecondary').value;
+  config.theme.accentColor = document.getElementById('colorAccent').value;
+  
+  await saveSiteConfig(config);
+}
 
-        function deleteUser(index) {
-            if (confirm('Are you sure you want to delete this user?')) {
-                const users = getUsers();
-                users.splice(index, 1);
-                localStorage.setItem('ecostay_users', JSON.stringify(users));
-                loadMembers();
-                loadAdminStats();
-            }
-        }
+async function resetToDefaults() {
+  if (confirm('Reset all to default? This cannot be undone.')) {
+    await resetSiteConfig();
+    location.reload();
+  }
+}
 
-        function loadContentForm() {
-            const data = getSiteData();
-            document.getElementById('edit-trees').value = data.impact.trees || 0;
-            document.getElementById('edit-carbon').value = data.impact.carbon || 0;
-            document.getElementById('edit-members-count').value = data.impact.members || 0;
-            document.getElementById('edit-mission-title').value = data.mission.title || "";
-            document.getElementById('edit-mission-text').value = data.mission.text_mission || "";
-            document.getElementById('edit-who-text').value = data.who || "";
-            document.getElementById('edit-vision-text').value = data.mission.text_vision || "";
-            document.getElementById('edit-footer-email').value = data.footer?.email || "";
-            document.getElementById('edit-footer-phone').value = data.footer?.phone || "";
-            document.getElementById('edit-footer-address').value = data.footer?.address || "";
-        }
+async function previewSite() {
+  await saveAllChanges();
+  window.open('index.html', '_blank');
+}
 
-        document.getElementById('edit-site-data-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const data = getSiteData();
-            data.impact = {
-                trees: parseInt(document.getElementById('edit-trees').value) || 0,
-                carbon: parseInt(document.getElementById('edit-carbon').value) || 0,
-                members: parseInt(document.getElementById('edit-members-count').value) || 0
-            };
-            data.mission = {
-                title: document.getElementById('edit-mission-title').value,
-                sub: "Driving Sustainable Change from the Heart of Rwanda",
-                text_mission: document.getElementById('edit-mission-text').value,
-                text_vision: document.getElementById('edit-vision-text').value
-            };
-            data.who = document.getElementById('edit-who-text').value;
-            data.footer = {
-                ...data.footer,
-                email: document.getElementById('edit-footer-email').value,
-                phone: document.getElementById('edit-footer-phone').value,
-                address: document.getElementById('edit-footer-address').value
-            };
-            
-            localStorage.setItem('ecostay_site_data', JSON.stringify(data));
-            alert('Site data updated successfully!');
-            loadAdminStats();
-        });
+// Expose functions to window
+window.switchTab = switchTab;
+window.loadTabData = loadTabData;
+window.updateToggle = updateToggle;
+window.toggleVisibility = toggleVisibility;
+window.updateTheme = updateTheme;
+window.loadTeamList = loadTeamList;
+window.loadTestimonialsList = loadTestimonialsList;
+window.loadEventsList = loadEventsList;
+window.loadHistoryList = loadHistoryList;
+window.openTeamModal = openTeamModal;
+window.editTeamMember = editTeamMember;
+window.deleteTeamMember = deleteTeamMember;
+window.saveTeamMember = saveTeamMember;
+window.openTestimonialModal = openTestimonialModal;
+window.editTestimonial = editTestimonial;
+window.deleteTestimonial = deleteTestimonial;
+window.saveTestimonial = saveTestimonial;
+window.openEventModal = openEventModal;
+window.editEvent = editEvent;
+window.deleteEvent = deleteEvent;
+window.saveEvent = saveEvent;
+window.openHistoryModal = openHistoryModal;
+window.editHistoryItem = editHistoryItem;
+window.deleteHistoryItem = deleteHistoryItem;
+window.saveHistoryItem = saveHistoryItem;
+window.closeModal = closeModal;
+window.saveAllChanges = saveAllChanges;
+window.resetToDefaults = resetToDefaults;
+window.previewSite = previewSite;
 
-        // Initialize
-        switchView('dashboard');
+document.addEventListener('DOMContentLoaded', async () => {
+  // Wait a bit for the other module to initialize if needed
+  // though deferred scripts run in order, so this should be fine.
+  loadTabData('general');
+});
+</script>
 
-        // Members Growth Chart
-        const membersCtx = document.getElementById('membersChart').getContext('2d');
-        const membersChart = new Chart(membersCtx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-                datasets: [{
-                    label: 'New Members',
-                    data: [65, 78, 66, 89, 96, 112, 124],
-                    backgroundColor: 'rgba(26, 71, 42, 0.1)',
-                    borderColor: '#1a472a',
-                    borderWidth: 2,
-                    tension: 0.3,
-                    fill: true,
-                    pointBackgroundColor: '#fff',
-                    pointBorderColor: '#1a472a',
-                    pointBorderWidth: 2,
-                    pointRadius: 4,
-                    pointHoverRadius: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        backgroundColor: '#1a472a',
-                        titleFont: { size: 14 },
-                        bodyFont: { size: 14 },
-                        padding: 12,
-                        displayColors: false,
-                        callbacks: {
-                            label: function(context) {
-                                return 'Members: ' + context.raw;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
-                        },
-                        ticks: {
-                            stepSize: 20
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                }
-            }
-        });
-
-        // Events Chart
-        const eventsCtx = document.getElementById('eventsChart').getContext('2d');
-        const eventsChart = new Chart(eventsCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Completed', 'Ongoing', 'Upcoming', 'Cancelled'],
-                datasets: [{
-                    data: [15, 5, 7, 3],
-                    backgroundColor: [
-                        '#1a472a',
-                        '#4CAF50',
-                        '#8BC34A',
-                        '#F44336'
-                    ],
-                    borderWidth: 0,
-                    hoverOffset: 10
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '70%',
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            padding: 20,
-                            usePointStyle: true,
-                            pointStyle: 'circle',
-                            font: {
-                                size: 12
-                            }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: '#1a472a',
-                        titleFont: { size: 13 },
-                        bodyFont: { size: 13 },
-                        padding: 10,
-                        displayColors: false,
-                        callbacks: {
-                            label: function(context) {
-                                const label = context.label || '';
-                                const value = context.raw || 0;
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                const percentage = Math.round((value / total) * 100);
-                                return `${label}: ${value} (${percentage}%)`;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        // Toggle sidebar on mobile
-        document.querySelector('.hamburger').addEventListener('click', function() {
-            document.querySelector('.sidebar').classList.toggle('collapsed');
-            document.querySelector('.main-content').classList.toggle('expanded');
-        });
-
-        // Chart period toggle
-        const chartBtns = document.querySelectorAll('.chart-btn');
-        chartBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                // Remove active class from all buttons in the same group
-                this.parentElement.querySelectorAll('.chart-btn').forEach(b => {
-                    b.classList.remove('active');
-                });
-                // Add active class to clicked button
-                this.classList.add('active');
-                
-                // Here you would typically update the chart data based on the selected period
-                // For now, we'll just log the selected period
-                console.log('Selected period:', this.textContent.trim());
-            });
-        });
-    </script>
 </body>
 </html>

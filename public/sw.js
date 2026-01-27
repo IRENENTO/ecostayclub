@@ -3,7 +3,7 @@ const ASSETS = [
   '/',
   '/index.html',
   '/styles.css',
-  '/script.js',
+  '/script-firebase.js',
   '/img/ecostay-logo.png'
 ];
 
