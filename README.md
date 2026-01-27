@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # EcoStay Club
 
 A sustainable community platform for environmental awareness and action.
@@ -34,3 +35,6 @@ This project is automatically deployed to GitHub Pages using GitHub Actions.
 ## Contributing
 
 Feel free to submit issues and enhancement requests!
+=======
+# ecostayclub
+>>>>>>> 4d220806797fe6ecff5604ef5b062b141af09bee
