@@ -1120,10 +1120,15 @@ document.getElementById('joinClubForm').addEventListener('submit', async (e) => 
     // Important: set from_email to our club address and to_email to the user's submitted email.
     // These template variables must match the variables configured in your EmailJS template.
     await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-      from_email: 'ecostayrwanda@gmail.com', // Sender (fixed)
-      to_email: email,                        // Receiver (dynamic from form)
+      from_name: 'EcoStay Club',
+      to_name: fullName,
+      to_email: email,
       fullName: fullName,
-      email: email
+      user_email: email,
+      email: email,
+      message: 'Welcome to EcoStay Club! We are thrilled to have you as a Guardian of Nature.',
+      faculty: faculty || 'N/A',
+      year: year || 'N/A'
     });
 
     showToast('Joined successfully! Check your email.');

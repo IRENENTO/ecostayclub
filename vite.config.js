@@ -17,7 +17,7 @@ export default defineConfig({
     target: 'esnext',
     outDir: 'dist',
     emptyOutDir: true,
-    minify: 'terser',
+    minify: 'esbuild',
     sourcemap: false,
     rollupOptions: {
       input: {
