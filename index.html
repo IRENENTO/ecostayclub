@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EcoStay - Student Climate Action Rwanda</title>
-  <meta name="description" content="EcoStay Club is Rwanda's leading student network dedicated to biodiversity, campus reforestation, and community-led environmental resilience. Join us in greening our campuses.">
-  <meta name="keywords" content="EcoStay, Rwanda, Climate Action, Student Club, Reforestation, Biodiversity, University of Rwanda, Sustainability">
+  <meta name="description" content="EcoStay Club is Rwanda's leading student network dedicated to creating Green Havens and building climate resilience through campus reforestation and conservation.">
+  <meta name="keywords" content="EcoStay, Rwanda, Green Havens, Climate Resilience, Student Club, Reforestation, Biodiversity, University of Rwanda, Sustainability">
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#2d5a27">
   
@@ -13,20 +13,20 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ecostay.rw/">
   <meta property="og:title" content="EcoStay - Student Climate Action Rwanda">
-  <meta property="og:description" content="Join Rwanda's student movement for climate resilience and campus reforestation.">
+  <meta property="og:description" content="Join Rwanda's student movement to build climate resilience and create Green Havens through campus reforestation.">
   <meta property="og:image" content="/img/ecostay-logo.png">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="EcoStay - Student Climate Action Rwanda">
-  <meta property="twitter:description" content="Join Rwanda's student movement for climate resilience and campus reforestation.">
+  <meta property="twitter:description" content="Join Rwanda's student movement to build climate resilience and create Green Havens through campus reforestation.">
   <meta property="twitter:image" content="/img/ecostay-logo.png">
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/styles.css?v=1.5">
 
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script type="text/javascript">
@@ -75,43 +75,37 @@
       </div>
       
       <div class="modal-body">
-        <form id="landingLoginForm" class="auth-form">
+        <form id="landingLoginForm" class="auth-form" autocomplete="off">
           <div class="input-group">
             <i class="fa-solid fa-envelope"></i>
-            <input type="email" id="landEmail" required placeholder=" " />
+            <input type="email" id="landEmail" required placeholder=" " autocomplete="off" />
             <label data-lang="label_email">Email</label>
           </div>
           <div class="input-group">
             <i class="fa-solid fa-lock"></i>
-            <input type="password" id="landPass" required placeholder=" " />
+            <input type="password" id="landPass" required placeholder=" " autocomplete="new-password" />
             <label data-lang="label_pass">Password</label>
             <i class="fa-solid fa-eye toggle-password" onclick="togglePasswordVisibility('landPass', this)"></i>
           </div>
           <button type="submit" class="btn primary full-width" data-lang="btn_login">Login</button>
         </form>
         
-        <form id="landingRegisterForm" class="auth-form u-hidden">
+        <form id="landingRegisterForm" class="auth-form u-hidden" autocomplete="off">
           <div class="input-group">
             <i class="fa-solid fa-user"></i>
-            <input type="text" id="landRegName" required placeholder=" " />
+            <input type="text" id="landRegName" required placeholder=" " autocomplete="off" />
             <label data-lang="label_name">Full Name</label>
           </div>
           <div class="input-group">
             <i class="fa-solid fa-envelope"></i>
-            <input type="email" id="landRegEmail" required placeholder=" " />
+            <input type="email" id="landRegEmail" required placeholder=" " autocomplete="off" />
             <label data-lang="label_email">Email</label>
           </div>
           <div class="input-group">
             <i class="fa-solid fa-lock"></i>
-            <input type="password" id="landRegPass" required placeholder=" " />
+            <input type="password" id="landRegPass" required placeholder=" " autocomplete="new-password" />
             <label data-lang="label_pass">Password</label>
             <i class="fa-solid fa-eye toggle-password" onclick="togglePasswordVisibility('landRegPass', this)"></i>
-          </div>
-          <div class="input-group">
-            <i class="fa-solid fa-lock"></i>
-            <input type="password" id="landRegConfirmPass" required placeholder=" " />
-            <label data-lang="label_confirm_pass">Confirm Password</label>
-            <i class="fa-solid fa-eye toggle-password" onclick="togglePasswordVisibility('landRegConfirmPass', this)"></i>
           </div>
           <button type="submit" class="btn primary full-width" data-lang="btn_create_acc">Create Account</button>
         </form>
@@ -235,37 +229,63 @@
 
 <!-- DASHBOARD (Visible after login) -->
 <section id="dashboard" class="section dashboard-section u-hidden">
-  <div class="section-header">
-    <h2 id="dashboard-welcome" data-lang="dashboard_welcome">Welcome back!</h2>
-    <div class="impact-welcome-card">
-      <h3 class="impact-title-text" data-lang="dashboard_impact">Ready to make an impact?</h3>
-      <p class="impact-desc" data-lang="dashboard_desc">
-        Join EcoStay Club today and be part of a vibrant community of students leading climate action. 
-        Gain access to exclusive events, workshops, and sustainable projects.
-      </p>
-      <button class="btn primary u-p-16-40" onclick="openModal('joinModal')">
-        <i class="fa-solid fa-seedling"></i> <span data-lang="hero_btn">Join EcoStay Club</span>
-      </button>
+  <div class="dashboard-header">
+    <div class="dashboard-welcome-banner">
+      <h2 id="dashboard-welcome" data-lang="dashboard_welcome">Welcome back!</h2>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <!-- Membership Card -->
+    <div class="card dashboard-card membership-status">
+      <h3>Membership Status</h3>
+      <div class="status-content">
+        <div class="status-icon"><i class="fa-solid fa-seedling"></i></div>
+        <div class="status-text">
+          <p><strong>EcoStay Guardian</strong></p>
+          <p class="u-fs-0-9 u-text-muted">Active since 2026</p>
+        </div>
+      </div>
+      <div class="membership-id">
+        <span class="u-text-muted">Member ID:</span>
+        <code id="dash-member-id">EC-2026-XXXX</code>
+      </div>
     </div>
 
-    <div class="impact-stats-container">
-      <h3 class="impact-stats-title" data-lang="impact_title">Our Collective Impact</h3>
-      <div class="cards impact-stats-grid">
-        <div class="card impact-stat-card">
-          <div class="icon-lg impact-stat-icon u-text-primary"><i class="fa-solid fa-tree"></i></div>
-          <h2 id="counter-trees" class="impact-stat-number">--</h2>
-          <p class="impact-stat-text" data-lang="trees_planted">Trees Planted</p>
-        </div>
-        <div class="card impact-stat-card">
-          <div class="icon-lg impact-stat-icon u-text-accent"><i class="fa-solid fa-cloud-arrow-down"></i></div>
-          <h2 id="counter-carbon" class="impact-stat-number">--</h2>
-          <p class="impact-stat-text" data-lang="carbon_saved">CO2 Sequestered (kg)</p>
-        </div>
-        <div class="card impact-stat-card">
-          <div class="icon-lg impact-stat-icon u-text-blue"><i class="fa-solid fa-users"></i></div>
-          <h2 id="counter-members" class="impact-stat-number">--</h2>
-          <p class="impact-stat-text" data-lang="active_members">Active Guardians</p>
-        </div>
+    <!-- Quick Actions -->
+    <div class="card dashboard-card quick-actions">
+      <h3>Quick Actions</h3>
+      <div class="action-buttons">
+        <button class="btn accent btn-sm" onclick="location.href='#events-section'">
+          <i class="fa-solid fa-calendar-check"></i> Register for Events
+        </button>
+        <button class="btn primary btn-sm" onclick="location.href='#donate'">
+          <i class="fa-solid fa-hand-holding-heart"></i> Support Projects
+        </button>
+        <button class="btn outline btn-sm" onclick="toggleChatbot()">
+          <i class="fa-solid fa-headset"></i> Get Help
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="impact-stats-container">
+    <h3 class="impact-stats-title" data-lang="impact_title">Our Collective Impact</h3>
+    <div class="cards impact-stats-grid">
+      <div class="card impact-stat-card">
+        <div class="icon-lg impact-stat-icon u-text-primary"><i class="fa-solid fa-tree"></i></div>
+        <h2 id="counter-trees" class="impact-stat-number">--</h2>
+        <p class="impact-stat-text" data-lang="trees_planted">Trees Planted</p>
+      </div>
+      <div class="card impact-stat-card">
+        <div class="icon-lg impact-stat-icon u-text-accent"><i class="fa-solid fa-cloud-arrow-down"></i></div>
+        <h2 id="counter-carbon" class="impact-stat-number">--</h2>
+        <p class="impact-stat-text" data-lang="carbon_saved">CO2 Sequestered (kg)</p>
+      </div>
+      <div class="card impact-stat-card">
+        <div class="icon-lg impact-stat-icon u-text-blue"><i class="fa-solid fa-users"></i></div>
+        <h2 id="counter-members" class="impact-stat-number">--</h2>
+        <p class="impact-stat-text" data-lang="active_members">Active Guardians</p>
       </div>
     </div>
   </div>
@@ -275,7 +295,7 @@
 <section id="home" class="hero">
   <div class="hero-container">
     <h1 data-lang="hero_title">Greening Our Campuses, Protecting Our Future</h1>
-    <p class="club-desc" data-lang="hero_desc">Join Rwanda's leading student network dedicated to biodiversity, campus reforestation, and community-led environmental resilience.</p>
+    <p class="club-desc" data-lang="hero_desc">Join Rwanda's leading student network dedicated to creating Green Havens and building climate resilience through campus reforestation and conservation.</p>
     <button class="btn accent u-p-15-30" onclick="openModal('joinModal')">
       <i class="fa-solid fa-heart"></i> <span data-lang="hero_btn">Become a Guardian of Nature</span>
     </button>
@@ -292,12 +312,12 @@
     <div class="card text-center">
       <div class="icon-lg"><i class="fa-solid fa-seedling"></i></div>
       <h3 data-lang="card_mission">Our Mission</h3>
-      <p data-lang="text_mission">To transform university campuses into green havens through student-led planting, conservation advocacy, and community-driven environmental projects across Rwanda.</p>
+      <p data-lang="text_mission">To cultivate Green Havens across university campuses, empowering students to build climate resilience through hands-on conservation and indigenous reforestation.</p>
     </div>
     <div class="card text-center">
       <div class="icon-lg"><i class="fa-solid fa-eye"></i></div>
       <h3 data-lang="card_vision">Our Vision</h3>
-      <p data-lang="text_vision">A Rwanda where every student is a guardian of biodiversity, leading the transition to a greener, climate-resilient nation for future generations.</p>
+      <p data-lang="text_vision">A Rwanda where every student leads the creation of Green Havens, fostering a culture of climate resilience and environmental stewardship.</p>
     </div>
   </div>
 </section>
@@ -401,8 +421,8 @@
       </button>
       
       <div class="donate-partners">
-        <img src="https://www.mtn.com/wp-content/themes/mtn-theme/images/mtn-logo.svg" alt="MTN" class="partner-logo">
-        <img src="https://www.airtel.com/content/dam/airtel-africa-homepage/images/airtel-logo.png" alt="Airtel" class="partner-logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/MTN_Logo.svg/1024px-MTN_Logo.svg.png" alt="MTN" class="partner-logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Airtel_logo.svg/1200px-Airtel_logo.svg.png" alt="Airtel" class="partner-logo">
       </div>
     </div>
   </div>
@@ -426,7 +446,7 @@
   </div>
   <div class="footer-legal-bar">
     <p class="footer-legal-text">
-      © 2026 EcoStay Club Rwanda. All rights reserved. | <a href="admin.html" class="footer-link-alt">Admin Login</a>
+      © 2026 EcoStay Club Rwanda. All rights reserved.
     </p>
   </div>
 </footer>
@@ -473,12 +493,6 @@
           <input type="password" id="regPass" required placeholder=" " />
           <label data-lang="label_pass">Password</label>
           <i class="fa-solid fa-eye toggle-password" onclick="togglePasswordVisibility('regPass', this)"></i>
-        </div>
-        <div class="input-group">
-          <i class="fa-solid fa-lock"></i>
-          <input type="password" id="regConfirmPass" required placeholder=" " />
-          <label data-lang="label_confirm_pass">Confirm Password</label>
-          <i class="fa-solid fa-eye toggle-password" onclick="togglePasswordVisibility('regConfirmPass', this)"></i>
         </div>
         <button type="submit" class="btn primary" data-lang="btn_create_acc">Create Account</button>
       </form>
@@ -564,56 +578,5 @@
     </div>
   </div>
 
-  <script>
-    // Chatbot functionality
-    function toggleChatbot() {
-      const chatbot = document.getElementById('chatbot-container');
-      const button = document.getElementById('chatbot-button');
-      if (chatbot.classList.contains('active')) {
-        chatbot.classList.remove('active');
-        button.classList.remove('active');
-      } else {
-        chatbot.classList.add('active');
-        button.classList.add('active');
-      }
-    }
-
-    function addMessage(message, isBot = false) {
-      const messages = document.getElementById('chatbot-messages');
-      const messageDiv = document.createElement('div');
-      messageDiv.className = `chatbot-message ${isBot ? 'bot' : 'user'}`;
-      messageDiv.innerHTML = `<p>${message}</p>`;
-      messages.appendChild(messageDiv);
-      messages.scrollTop = messages.scrollHeight;
-    }
-
-    function handleChatbotInput(event) {
-      if (event.key === 'Enter') {
-        sendChatbotMessage();
-      }
-    }
-
-    function sendChatbotMessage() {
-      const input = document.getElementById('chatbot-input');
-      const message = input.value.trim();
-      
-      if (message) {
-        addMessage(message, false);
-        input.value = '';
-        
-        // Simple bot response (can be expanded with more sophisticated logic)
-        setTimeout(() => {
-          const responses = [
-            "I can help you learn more about EcoStay's activities and how to get involved.",
-            "Would you like to know about our upcoming events or how to join the club?",
-            "I'm here to help! What would you like to know about our environmental initiatives?",
-            "You can find more information about our team and projects on this website."
-          ];
-          const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-          addMessage(randomResponse, true);
-        }, 500);
-      }
-    }
-  </script>
 </body>
 </html>

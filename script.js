@@ -3,10 +3,10 @@ const EMAILJS_SERVICE_ID = "service_jjh15de";
 const EMAILJS_TEMPLATE_ID = "template_1a3m2xk";
 
 // ONE-TIME SYSTEM RESET (Clears old data to ensure new updates are loaded)
-if (!localStorage.getItem('system_reset_jan18')) {
+if (!localStorage.getItem('system_reset_feb02')) {
     localStorage.removeItem('ecostay_site_data'); // Force reload of site data
-    localStorage.setItem('system_reset_jan18', 'true');
-    console.log("System storage reset for Jan 18 updates.");
+    localStorage.setItem('system_reset_feb02', 'true');
+    console.log("System storage reset for Feb 02 updates.");
 }
 
 // Initialize Global Site Data if not exists
@@ -15,8 +15,8 @@ if (!localStorage.getItem('ecostay_site_data')) {
         mission: {
             title: "Our Mission & Vision",
             sub: "Driving Sustainable Change from the Heart of Rwanda",
-            text_mission: "To transform university campuses into green havens through student-led planting and conservation.",
-            text_vision: "A Rwanda where every student is a guardian of biodiversity."
+            text_mission: "To cultivate Green Havens across university campuses, empowering students to build climate resilience through hands-on conservation and indigenous reforestation.",
+            text_vision: "A Rwanda where every student leads the creation of Green Havens, fostering a culture of climate resilience and environmental stewardship."
         },
         impact: {
             trees: 1240,
@@ -24,21 +24,21 @@ if (!localStorage.getItem('ecostay_site_data')) {
             members: 450
         },
         team: [
-            { name: "Niyigaba Heritier", role: "Founder", dept: "UR - CST (Spatial Planning)", image: "/img/niyigaba heritier founder tel number +250 784 095 661.jpeg", phone: "+250 784 095 661", email: "niyigaba@ecostay.org" },
-            { name: "Byukusenge Rebecca", role: "President", dept: "UR - CST (Spatial Planning)", image: "/img/byukusenge rebecca tel number +250 798 741 856 role president.jpeg", phone: "+250 798 741 856" },
-            { name: "Niyogisubizo Jean Dedier", role: "General Coordinator", dept: "UR - CST (Spatial Planning)", image: "/img/niyogisubizo jean dedier tel nbr+250 722 227 775 role general coordinator.jpeg", phone: "+250 722 227 775" },
-            { name: "Uwase Diane", role: "General Secretary", dept: "UR - CST (Spatial Planning)", image: "/img/uwase diane tel number +250 793 105 787 role secretair.jpeg", phone: "+250 793 105 787" },
-            { name: "Irene Irumva", role: "IT & Communication", dept: "INES Ruhengeri (Software Engineering)", image: "/img/irene irumva role it and communication tel number 0787427123.jpg", phone: "+250 787 427 123" },
-            { name: "Niyonsenga Claudine", role: "Accountant", dept: "UR - CST (Spatial Planning)", image: "/img/Niyonsenga claudine tel number +250 798 268 955 accountant.jpeg", phone: "+250 798 268 955" },
-            { name: "Prof. Gaspard Rwanyiziri", role: "Faculty Advisor", dept: "UR - CST (Spatial Planning)", image: "/img/adviser prof gaspard RWANYIZIRI tel nber +250 788 681 438.jpeg", phone: "+250 788 681 438" }
+            { name: "Niyigaba Heritier", role: "Founder", dept: "UR - CST (Spatial Planning)", image: "/img/niyigaba-heritier.jpeg", phone: "+250 784 095 661", email: "niyigaba@ecostay.org" },
+            { name: "Byukusenge Rebecca", role: "President", dept: "UR - CST (Spatial Planning)", image: "/img/rebecca-byukusenge.jpeg", phone: "+250 798 741 856" },
+            { name: "Niyogisubizo Jean Dedier", role: "General Coordinator", dept: "UR - CST (Spatial Planning)", image: "/img/jean-dedier.jpeg", phone: "+250 722 227 775" },
+            { name: "Uwase Diane", role: "General Secretary", dept: "UR - CST (Spatial Planning)", image: "/img/diane-uwase.jpeg", phone: "+250 793 105 787" },
+            { name: "Irene Irumva", role: "IT & Communication", dept: "INES Ruhengeri (Software Engineering)", image: "/img/irene-irumva.jpg", phone: "+250 787 427 123" },
+            { name: "Niyonsenga Claudine", role: "Accountant", dept: "UR - CST (Spatial Planning)", image: "/img/claudine-niyonsenga.jpeg", phone: "+250 798 268 955" },
+            { name: "Prof. Gaspard Rwanyiziri", role: "Faculty Advisor", dept: "UR - CST (Spatial Planning)", image: "/img/gaspard-rwanyiziri.jpeg", phone: "+250 788 681 438" }
         ],
         testimonials: [
-            { text: "Leading EcoStay has been an incredible journey of growth and impact. Seeing students take ownership of environmental initiatives is truly inspiring.", name: "Byukusenge Rebecca", role: "President, UR - CST (Spatial Planning)", image: "/img/byukusenge rebecca tel number +250 798 741 856 role president.jpeg" },
-            { text: "As our IT lead, I've been able to blend my tech skills with environmental activism. The digital tools we've implemented have helped us reach more students than ever before.", name: "Irene Irumva", role: "IT & Communication, INES Ruhengeri (Software Engineering)", image: "/img/irene irumva role it and communication tel number 0787427123.jpg" }
+            { text: "Leading EcoStay has been an incredible journey of growth and impact. Seeing students take ownership of environmental initiatives is truly inspiring.", name: "Byukusenge Rebecca", role: "President, UR - CST (Spatial Planning)", image: "/img/rebecca-byukusenge.jpeg" },
+            { text: "As our IT lead, I've been able to blend my tech skills with environmental activism. The digital tools we've implemented have helped us reach more students than ever before.", name: "Irene Irumva", role: "IT & Communication, INES Ruhengeri (Software Engineering)", image: "/img/irene-irumva.jpg" }
         ],
         events: [
-            { title: "Campus Forest Initiative", date: "OCT 05, 2026", location: "UR-Huye Campus", desc: "Planted over 500 indigenous trees to restore the campus green belt.", status: "Completed", image: "/img/events 1.jpeg", impact: "We successfully restored 2 hectares of land with the help of 100 student volunteers." },
-            { title: "Umuganda for Nature", date: "NOV 12, 2026", location: "Kigali Neighborhoods", desc: "Community cleaning and landscape restoration in local neighborhoods.", status: "Upcoming", image: "/img/events 2.jpeg" }
+            { title: "Campus Forest Initiative", date: "OCT 05, 2026", location: "UR-Huye Campus", desc: "Planted over 500 indigenous trees to restore the campus green belt.", status: "Completed", image: "/img/events-1.jpeg", impact: "We successfully restored 2 hectares of land with the help of 100 student volunteers." },
+            { title: "Umuganda for Nature", date: "NOV 12, 2026", location: "Kigali Neighborhoods", desc: "Community cleaning and landscape restoration in local neighborhoods.", status: "Upcoming", image: "/img/events-2.jpeg" }
         ],
         history: [
             { year: "2024", title: "The Germination", desc: "The concept was born at the University of Rwanda by a group of passionate students determined to restore biodiversity on our campuses." },
@@ -61,11 +61,10 @@ if (!localStorage.getItem('ecostay_site_data')) {
 }
 
 // ONE-TIME SYSTEM RESET (Clears old users to fix login issues)
-if (!localStorage.getItem('system_reset_jan18')) {
+if (!localStorage.getItem('system_reset_feb02')) {
     localStorage.removeItem('ecostay_users');
     localStorage.removeItem('ecostay_user');
     localStorage.removeItem('ecostay_admin');
-    localStorage.removeItem('system_reset_jan13');
     
     // Initialize demo users for testing
     const demoUsers = [
@@ -75,7 +74,7 @@ if (!localStorage.getItem('system_reset_jan18')) {
     ];
     localStorage.setItem('ecostay_users', JSON.stringify(demoUsers));
     
-    localStorage.setItem('system_reset_jan18', 'true');
+    localStorage.setItem('system_reset_feb02', 'true');
     console.log("System storage reset and demo users initialized.");
 }
 
@@ -393,7 +392,7 @@ const translations = {
     nav_donate: "Donate", nav_events: "Events", nav_team: "Team", nav_contact: "Contact",
     btn_darkmode: "Dark Mode", btn_login_signup: "Login / Sign Up", btn_login: "Login", btn_logout: "Logout", btn_edit_profile: "Edit Profile",
     hero_title: "EcoStay Student for Climate Action", hero_desc: "Join Rwanda's leading student network dedicated to biodiversity and campus reforestation.", hero_btn: "Join EcoStay Club",
-    mission_title: "Our Mission & Vision", mission_sub: "Driving Sustainable Change from the Heart of Rwanda", card_mission: "Our Mission", text_mission: "To transform university campuses into green havens through student-led planting and conservation.", card_vision: "Our Vision", text_vision: "A Rwanda where every student is a guardian of biodiversity.",
+    mission_title: "Our Mission & Vision", mission_sub: "Driving Sustainable Change from the Heart of Rwanda", card_mission: "Our Mission", text_mission: "To cultivate Green Havens across university campuses, empowering students to build climate resilience through hands-on conservation and indigenous reforestation.", card_vision: "Our Vision", text_vision: "A Rwanda where every student leads the creation of Green Havens, fostering a culture of climate resilience and environmental stewardship.",
     journey_title: "Our Journey", journey_sub: "From a Seed of an Idea to a National Movement",
     year_2024_title: "The Germination", year_2024_desc: "The concept was born at the University of Rwanda by students determined to restore biodiversity.",
     year_2025_title: "Rooting & Growth", year_2025_desc: "We established student-led nurseries and partnered with local communities.",
@@ -415,13 +414,13 @@ const translations = {
     btn_register_event: "Register to Join",
     btn_view_impact: "View Impact",
     footer_phone: "Phone", footer_email: "Email", footer_location: "Address",
-    label_name: "Full Name", label_email: "Email", label_pass: "Password", label_confirm_pass: "Confirm Password",
+    label_name: "Full Name", label_email: "Email", label_pass: "Password",
     label_whatsapp: "WhatsApp Number", label_faculty: "Faculty", label_year: "Year of Study", label_interests: "Interests",
     btn_create_acc: "Create Account", btn_save: "Save Changes", btn_confirm: "Confirm",
     dashboard_welcome: "Welcome back", dashboard_impact: "Ready to make an impact?", dashboard_desc: "Join EcoStay Club today and be part of a vibrant community of students leading climate action.",
     impact_title: "Our Collective Impact", trees_planted: "Trees Planted", carbon_saved: "CO2 Sequestered (kg)", active_members: "Active Guardians",
     toast_welcome: "Welcome to EcoStay!", toast_invalid_auth: "Invalid email or password.", toast_reg_success: "Account created successfully!",
-    toast_email_taken: "Email already registered.", toast_pass_mismatch: "Passwords do not match.", toast_pass_short: "Password must be at least 8 characters.",
+    toast_email_taken: "Email already registered.", toast_pass_short: "Password must be at least 8 characters.",
     toast_login_first: "Please login to join.", toast_sending: "Processing...", toast_fill_all: "Please fill all required fields.",
     toast_invalid_email: "Please enter a valid email.", toast_invalid_phone: "Please enter a valid phone number.",
     hint_photo: "Click camera to update photo", auth_title: "Account Access", tab_login: "Login", tab_register: "Register"
@@ -432,7 +431,7 @@ const translations = {
     nav_donate: "Faire un Don", nav_events: "Événements", nav_team: "Équipe", nav_contact: "Contact",
     btn_darkmode: "Mode Sombre", btn_login_signup: "Connexion / Inscription", btn_login: "Connexion", btn_logout: "Déconnexion", btn_edit_profile: "Modifier le profil",
     hero_title: "EcoStay Étudiants pour l'Action Climat", hero_desc: "Rejoignez le premier réseau étudiant du Rwanda dédié à la biodiversité et au reboisement des campus.", hero_btn: "Rejoindre le Club EcoStay",
-    mission_title: "Notre Mission & Vision", mission_sub: "Conduire le Changement Durable depuis le Cœur du Rwanda", card_mission: "Notre Mission", text_mission: "Transformer les campus universitaires en havres verts grâce à la plantation et à la conservation dirigées par les étudiants.", card_vision: "Notre Vision", text_vision: "Un Rwanda où chaque étudiant est un gardien de la biodiversité.",
+    mission_title: "Notre Mission & Vision", mission_sub: "Conduire le Changement Durable depuis le Cœur du Rwanda", card_mission: "Notre Mission", text_mission: "Cultiver des Havres Verts dans les campus universitaires, permettant aux étudiants de renforcer la résilience climatique par la conservation pratique et le reboisement indigène.", card_vision: "Notre Vision", text_vision: "Un Rwanda où chaque étudiant dirige la création de Havres Verts, favorisant une culture de résilience climatique et de gérance environnementale.",
     journey_title: "Notre Parcours", journey_sub: "D'une Graine d'Idée à un Mouvement National",
     year_2024_title: "La Germination", year_2024_desc: "Le concept est né à l'Université du Rwanda par des étudiants déterminés à restaurer la biodiversité.",
     year_2025_title: "Enracinement & Croissance", year_2025_desc: "Nous avons établi des pépinières gérées par des étudiants et établi des partenariats avec les communautés locales.",
@@ -454,13 +453,13 @@ const translations = {
     btn_register_event: "S'inscrire pour Participer",
     btn_view_impact: "Voir l'Impact",
     footer_phone: "Téléphone", footer_email: "Email", footer_location: "Adresse",
-    label_name: "Nom Complet", label_email: "Email", label_pass: "Mot de passe", label_confirm_pass: "Confirmer le mot de passe",
+    label_name: "Nom Complet", label_email: "Email", label_pass: "Mot de passe",
     label_whatsapp: "Numéro WhatsApp", label_faculty: "Faculté", label_year: "Année d'étude", label_interests: "Intérêts",
     btn_create_acc: "Créer un compte", btn_save: "Enregistrer", btn_confirm: "Confirmer",
     dashboard_welcome: "Bon retour", dashboard_impact: "Prêt à avoir un impact ?", dashboard_desc: "Rejoignez le club EcoStay dès aujourd'hui et faites partie d'une communauté dynamique d'étudiants menant l'action pour le climat.",
     impact_title: "Notre Impact Collectif", trees_planted: "Arbres Plantés", carbon_saved: "CO2 Séquestré (kg)", active_members: "Gardiens Actifs",
     toast_welcome: "Bienvenue sur EcoStay !", toast_invalid_auth: "Email ou mot de passe invalide.", toast_reg_success: "Compte créé avec succès !",
-    toast_email_taken: "Email déjà enregistré.", toast_pass_mismatch: "Les mots de passe ne correspondent pas.", toast_pass_short: "Le mot de passe doit comporter au moins 8 caractères.",
+    toast_email_taken: "Email déjà enregistré.", toast_pass_short: "Le mot de passe doit comporter au moins 8 caractères.",
     toast_login_first: "Veuillez vous connecter pour rejoindre.", toast_sending: "Traitement en cours...", toast_fill_all: "Veuillez remplir tous les champs obligatoires.",
     toast_invalid_email: "Veuillez entrer un email valide.", toast_invalid_phone: "Veuillez entrer un numéro de téléphone valide.",
     hint_photo: "Cliquez sur la caméra pour mettre à jour la photo", auth_title: "Accès au Compte", tab_login: "Connexion", tab_register: "S'inscrire"
@@ -471,7 +470,7 @@ const translations = {
     nav_donate: "Shyigikira", nav_events: "Ibikorwa", nav_team: "Ikipe", nav_contact: "Twandikire",
     btn_darkmode: "Uburyo bw'Ijoro", btn_login_signup: "Injira / Iyandikishe", btn_login: "Injira", btn_logout: "Sohoka", btn_edit_profile: "Hindura Umwirondoro",
     hero_title: "EcoStay Abanyeshuri mu Bikorwa by'Ibihe", hero_desc: "Injira mu muryango mugari w'abanyeshuri mu Rwanda baharanira kubungabunga ibidukikije no gutera ibiti ku mashuri.", hero_btn: "Injira muri EcoStay Club",
-    mission_title: "Intego n'Icyerekezo", mission_sub: "Guhindura Ibidukikije uhereye mu Mutima w'u Rwanda", card_mission: "Intego Yacu", text_mission: "Guhindura amashuri makuru na kaminuza ahantu hatoshye binyuze mu gutera ibiti no kubibungabunga bikozwe n'abanyeshuri.", card_vision: "Icyerekezo Cyacu", text_vision: "u Rwanda aho buri munyeshuri ari umurinzi w'ibinyabuzima bitandukanye.",
+    mission_title: "Intego n'Icyerekezo", mission_sub: "Guhindura Ibidukikije uhereye mu Mutima w'u Rwanda", card_mission: "Intego Yacu", text_mission: "Guhanga Ahantu Hatoshye (Green Havens) muri kaminuza, guha ubushobozi abanyeshuri bwo kubaka ubwirinzi bw'ibihe (climate resilience) binyuze mu kubungabunga ibidukikije no gutera ibiti by'umwimerere.", card_vision: "Icyerekezo Cyacu", text_vision: "u Rwanda aho buri munyeshuri ayobora ishyirwaho ry'Ahantu Hatoshye, guteza imbere umuco w'ubwirinzi bw'ibihe no kwita ku bidukikije.",
     journey_title: "Urugendo Rwacu", journey_sub: "Uhereye ku Gitekerezo Kugeza ku Muryango Mugari w'Igihugu",
     year_2024_title: "Igutera ry'Igitekerezo", year_2024_desc: "Iki gitekerezo cyavutse muri Kaminuza y'u Rwanda cyizwe n'abanyeshuri bashakaga kugarura urusobe rw'ibinyabuzima.",
     year_2025_title: "Gushinga Imizi", year_2025_desc: "Twashizeho pepiniyeri zicungwa n'abanyeshuri kandi dufatanya n'abaturage mu gutera ibiti.",
@@ -493,13 +492,13 @@ const translations = {
     btn_register_event: "Iyandikishe Kwitabira",
     btn_view_impact: "Reba Ibyagezweho",
     footer_phone: "Terefoni", footer_email: "Imeri", footer_location: "Aho duherereye",
-    label_name: "Amazina Yose", label_email: "Imeri", label_pass: "Ijambo ry'ibanga", label_confirm_pass: "Subiramo ijambo ry'ibanga",
+    label_name: "Amazina Yose", label_email: "Imeri", label_pass: "Ijambo ry'ibanga",
     label_whatsapp: "Nimero ya WhatsApp", label_faculty: "Ishami", label_year: "Umwaka w'ishuri", label_interests: "Ibyo ukunda",
     btn_create_acc: "Fungura konti", btn_save: "Bika Impinduka", btn_confirm: "Emeza",
     dashboard_welcome: "Murakaza neza", dashboard_impact: "Witeguye guhindura ibidukikije ?", dashboard_desc: "Injira muri EcoStay Club uyu munsi ube mu itsinda ry'abanyeshuri bari imbere mu bikorwa by'ibihe.",
     impact_title: "Ibyo Twagezeho Twese", trees_planted: "Ibiti Byatewe", carbon_saved: "CO2 Yakuwe (kg)", active_members: "Abanyamuryango Bakora",
     toast_welcome: "Murakaza neza kuri EcoStay!", toast_invalid_auth: "Imeri cyangwa ijambo ry'ibanga si byo.", toast_reg_success: "Konti yawe yafunguwe neza!",
-    toast_email_taken: "Iyi imeri yaranditswe.", toast_pass_mismatch: "Amagambo y'ibanga ntabwo ahuye.", toast_pass_short: "Ijambo ry'ibanga rigomba kugira inyuguti 8.",
+    toast_email_taken: "Iyi imeri yaranditswe.", toast_pass_short: "Ijambo ry'ibanga rigomba kugira inyuguti 8.",
     toast_login_first: "Banza winjire ubashe kwiyandikisha.", toast_sending: "Biracyatunganywa...", toast_fill_all: "Uzuza imyanya yose isabwa.",
     toast_invalid_email: "Andika imeri itunganye.", toast_invalid_phone: "Andika nimero ya terefoni itunganye.",
     hint_photo: "Kanda kuri kamera uhindure ifoto", auth_title: "Injira mu Konti", tab_login: "Injira", tab_register: "Iyandikishe"
@@ -655,10 +654,12 @@ function checkLogin() {
     const avatarSrc = getSafeAvatar(user);
 
     if(authLanding) {
+      authLanding.style.display = 'none';
       authLanding.classList.add('u-hidden');
       authLanding.classList.remove('u-flex');
     }
     if(mainContent) {
+      mainContent.style.display = 'block';
       mainContent.classList.add('u-block');
       mainContent.classList.remove('u-hidden');
     }
@@ -669,8 +670,11 @@ function checkLogin() {
       if (leafletMap) leafletMap.invalidateSize();
     }, 100);
 
+    if (desktopGuest) desktopGuest.style.display = 'none';
+    if (desktopUser) desktopUser.style.display = 'flex';
+    
     desktopGuest.classList.add('u-hidden');
-    desktopUser.classList.add('u-block');
+    desktopUser.classList.add('u-flex');
     desktopUser.classList.remove('u-hidden');
     document.getElementById("nav-name").innerText = user.name.split(" ")[0];
     document.getElementById("nav-avatar").src = avatarSrc;
@@ -680,9 +684,47 @@ function checkLogin() {
     if (dashboard) {
         dashboard.classList.add('u-block');
         dashboard.classList.remove('u-hidden');
+        dashboard.style.display = 'block';
         const lang = localStorage.getItem('lang') || 'en';
         const welcomePrefix = translations[lang]['dashboard_welcome'] || "Welcome back";
         document.getElementById("dashboard-welcome").innerText = `${welcomePrefix}, ${user.name}!`;
+
+        // Populate Dashboard Profile
+        if (document.getElementById("dash-name")) document.getElementById("dash-name").innerText = user.name;
+        if (document.getElementById("dash-email")) document.getElementById("dash-email").innerText = user.email;
+        if (document.getElementById("dash-avatar")) document.getElementById("dash-avatar").src = avatarSrc;
+        
+        // Populate Member ID & Status
+        const memberIdEl = document.getElementById("dash-member-id");
+        const membershipStatusText = document.querySelector(".membership-status p strong");
+        const membershipSubText = document.querySelector(".membership-status .u-text-muted");
+        const memberBadge = document.querySelector(".member-badge");
+
+        if (user.is_member) {
+            if (membershipStatusText) membershipStatusText.innerText = "EcoStay Guardian";
+            if (memberBadge) {
+                memberBadge.classList.remove("u-hidden");
+                memberBadge.innerHTML = `<i class="fa-solid fa-certificate"></i> Verified Member`;
+            }
+            if (memberIdEl) {
+                if (!user.member_id) {
+                    user.member_id = `EC-2026-${Math.abs(user.email.split('').reduce((a,b)=>{a=((a<<5)-a)+b.charCodeAt(0);return a&a},0)).toString().slice(0,4).padStart(4, '0')}`;
+                    localStorage.setItem("ecostay_user", JSON.stringify(user));
+                }
+                memberIdEl.innerText = user.member_id;
+            }
+        } else {
+            if (membershipStatusText) membershipStatusText.innerText = "Guest / Supporter";
+            if (membershipSubText) membershipSubText.innerHTML = `<span class="u-text-accent">Pending Admin Approval</span>`;
+            if (memberBadge) {
+                memberBadge.innerHTML = `<i class="fa-solid fa-clock"></i> Pending`;
+                memberBadge.style.background = "var(--accent)";
+                memberBadge.style.color = "white";
+            }
+            if (memberIdEl) {
+                memberIdEl.innerHTML = `<span class="u-fs-0-8">Only Admin can approve membership</span>`;
+            }
+        }
     }
     if (hero) hero.classList.add('u-hidden');
 
@@ -699,10 +741,14 @@ function checkLogin() {
       });
     }
 
-    if(mobileGuest) mobileGuest.classList.add('u-hidden');
+    if(mobileGuest) {
+        mobileGuest.classList.add('u-hidden');
+        mobileGuest.style.display = 'none';
+    }
     if(mobileUser) {
       mobileUser.classList.add('u-block');
       mobileUser.classList.remove('u-hidden');
+      mobileUser.style.display = 'block';
       document.getElementById("mobile-name").innerText = user.name;
       document.getElementById("mobile-email").innerText = user.email;
       document.getElementById("mobile-avatar").src = avatarSrc;
@@ -711,11 +757,16 @@ function checkLogin() {
     if(authLanding) {
       authLanding.classList.add('u-flex');
       authLanding.classList.remove('u-hidden');
+      authLanding.style.display = 'flex';
     }
     if(mainContent) {
       mainContent.classList.add('u-hidden');
       mainContent.classList.remove('u-block');
+      mainContent.style.display = 'none';
     }
+
+    if (desktopGuest) desktopGuest.style.display = 'flex';
+    if (desktopUser) desktopUser.style.display = 'none';
 
     desktopGuest.classList.add('u-flex');
     desktopGuest.classList.remove('u-hidden');
@@ -725,82 +776,110 @@ function checkLogin() {
     if(mobileGuest) {
       mobileGuest.classList.add('u-block');
       mobileGuest.classList.remove('u-hidden');
+      mobileGuest.style.display = 'block';
     }
     if(mobileUser) {
       mobileUser.classList.add('u-hidden');
       mobileUser.classList.remove('u-block');
+      mobileUser.style.display = 'none';
     }
     if(dashboard) {
       dashboard.classList.add('u-hidden');
       dashboard.classList.remove('u-block');
+      dashboard.style.display = 'none';
     }
     if(hero) {
       hero.classList.add('u-flex');
       hero.classList.remove('u-hidden');
+      hero.style.display = 'flex';
     }
   }
   document.body.classList.add('u-block'); // Show body after determining state
 }
 
 // LOGIN
-const handleLogin = (email, password) => {
+const handleLogin = async (email, password) => {
   const loginEmail = email.trim().toLowerCase();
   const loginPass = password.trim();
 
-  // DEBUG LOG (Safe to remove after testing)
-  console.log("🔐 Attempting login with:", { email: loginEmail, password: "***" });
-
-  // --- Admin Bypass ---
+  // --- 1. Admin Bypass ---
   if(loginEmail === "admin@ecostay.rw" && loginPass === "admin123") {
-    console.log("✅ Admin match found!");
     localStorage.setItem("ecostay_admin", "true");
     showToast("Welcome Admin!");
-    setTimeout(() => {
-      window.location.href = "admin.html";
-    }, 500);
+    setTimeout(() => { window.location.href = "admin.html"; }, 500);
     return true;
   }
 
-  const users = JSON.parse(localStorage.getItem("ecostay_users") || "[]");
-  console.log("📋 Available users:", users.map(u => u.email));
-  
-  const user = users.find(u => u.email.trim().toLowerCase() === loginEmail && u.password.trim() === loginPass);
+  // --- 2. Local Login (Fast & Offline-friendly) ---
+  const localUsers = JSON.parse(localStorage.getItem('ecostay_users') || '[]');
+  const localUser = localUsers.find(u => u.email === loginEmail && u.password === loginPass);
 
-  if(user) { 
-    console.log("✅ User found:", user.email);
-    localStorage.setItem("ecostay_user", JSON.stringify({ name: user.name, email: user.email, avatar: user.avatar, is_member: user.is_member || false }));
+  if (localUser) {
+    localStorage.setItem("ecostay_user", JSON.stringify({ 
+      name: localUser.name, 
+      email: localUser.email, 
+      avatar: localUser.avatar, 
+      is_member: localUser.is_member || false 
+    }));
     showToast("toast_welcome"); 
-    setTimeout(() => {
-      checkLogin(); 
-      closeModal('authModal');
-    }, 300);
+    setTimeout(() => { checkLogin(); closeModal('authModal'); }, 300);
     return true;
-  } 
-  console.log("❌ Invalid login attempt for:", loginEmail);
+  }
+
+  // --- 3. Firestore Fallback (If not found locally) ---
+  try {
+    const fs = await getFirestoreHelpers();
+    const docRef = fs.doc(fs.db, 'users', loginEmail);
+    const docSnap = await fs.getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const user = docSnap.data();
+      if (user.password === loginPass) {
+        // Sync to local storage for future offline access
+        if (!localUsers.some(u => u.email === loginEmail)) {
+            localUsers.push(user);
+            localStorage.setItem('ecostay_users', JSON.stringify(localUsers));
+        }
+        
+        localStorage.setItem("ecostay_user", JSON.stringify({ 
+          name: user.name, 
+          email: user.email, 
+          avatar: user.avatar, 
+          is_member: user.is_member || false 
+        }));
+        showToast("toast_welcome"); 
+        setTimeout(() => { checkLogin(); closeModal('authModal'); }, 300);
+        return true;
+      }
+    }
+  } catch (err) {
+    console.warn("Firestore login failed, using local only mode:", err);
+  }
+
   showToast("toast_invalid_auth", "error"); 
   return false;
 };
 
-document.getElementById("loginForm").addEventListener("submit", (e) => { 
+document.getElementById("loginForm").addEventListener("submit", async (e) => { 
   e.preventDefault(); 
-  handleLogin(document.getElementById("loginEmail").value.trim(), document.getElementById("loginPass").value);
+  await handleLogin(document.getElementById("loginEmail").value.trim(), document.getElementById("loginPass").value);
 });
 
 if(document.getElementById("landingLoginForm")) {
-  document.getElementById("landingLoginForm").addEventListener("submit", (e) => {
+  document.getElementById("landingLoginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
-    handleLogin(document.getElementById("landEmail").value.trim(), document.getElementById("landPass").value);
+    await handleLogin(document.getElementById("landEmail").value.trim(), document.getElementById("landPass").value);
   });
 }
 
 // REGISTER
-const handleRegister = (name, email, password, confirmPass, formElement) => {
-    // Validation
-    if (!name || !email || !password || !confirmPass) {
+const handleRegister = async (name, email, password, confirmPass, formElement) => {
+    if (!name || !email || !password) {
         showToast("toast_fill_all", "error");
         return;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    const cleanEmail = email.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
         showToast("toast_invalid_email", "error");
         return;
     }
@@ -808,53 +887,71 @@ const handleRegister = (name, email, password, confirmPass, formElement) => {
         showToast("toast_pass_short", "error");
         return;
     }
-    if (password !== confirmPass) {
+    if (confirmPass && password !== confirmPass) {
         showToast("toast_pass_mismatch", "error");
         return;
     }
 
-    const users = JSON.parse(localStorage.getItem("ecostay_users") || "[]");
-    if (users.find(u => u.email === email)) {
+    const defaultAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=1A4D2E&color=fff`;
+    const newUser = { 
+        name, 
+        email: cleanEmail, 
+        password: password.trim(), 
+        avatar: defaultAvatar, 
+        joined: new Date().toISOString(),
+        is_member: false
+    };
+
+    // 1. Local Persistence (Ensures it works even if Firestore is slow/offline)
+    const localUsers = JSON.parse(localStorage.getItem('ecostay_users') || '[]');
+    if (localUsers.some(u => u.email === cleanEmail)) {
         showToast("toast_email_taken", "error");
         return;
     }
+    localUsers.push(newUser);
+    localStorage.setItem('ecostay_users', JSON.stringify(localUsers));
 
-    const defaultAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=1A4D2E&color=fff`;
-    const newUser = { name, email, password, avatar: defaultAvatar, joined: new Date().toISOString() };
+    try {
+        // 2. Firestore Sync (Optional/Background)
+        const fs = await getFirestoreHelpers();
+        const docRef = fs.doc(fs.db, 'users', cleanEmail);
+        await fs.setDoc(docRef, newUser);
+    } catch (err) {
+        console.warn("Firestore sync failed, but account created locally:", err);
+    }
     
-    users.push(newUser);
-    localStorage.setItem("ecostay_users", JSON.stringify(users));
-    localStorage.setItem("ecostay_user", JSON.stringify({ name: newUser.name, email: newUser.email, avatar: newUser.avatar }));
+    localStorage.setItem("ecostay_user", JSON.stringify({ 
+        name: newUser.name, 
+        email: newUser.email, 
+        avatar: newUser.avatar,
+        is_member: false
+    }));
     
     showToast("toast_reg_success");
-    const modal = document.getElementById("authModal");
-    if (modal) {
-      modal.classList.remove('u-flex');
-      modal.classList.add('u-hidden');
-    }
+    closeModal('authModal');
     checkLogin();
-    formElement.reset();
+    if(formElement) formElement.reset();
 };
 
-document.getElementById("registerForm").addEventListener("submit", (e) => { 
+document.getElementById("registerForm").addEventListener("submit", async (e) => { 
     e.preventDefault();
-    handleRegister(
+    await handleRegister(
       document.getElementById("regName").value.trim(),
       document.getElementById("regEmail").value.trim(),
       document.getElementById("regPass").value,
-      document.getElementById("regConfirmPass").value,
+      null, // confirmPass removed from UI
       e.target
     );
 });
 
 if(document.getElementById("landingRegisterForm")) {
-  document.getElementById("landingRegisterForm").addEventListener("submit", (e) => {
+  document.getElementById("landingRegisterForm").addEventListener("submit", async (e) => {
     e.preventDefault();
-    handleRegister(
+    await handleRegister(
       document.getElementById("landRegName").value.trim(),
       document.getElementById("landRegEmail").value.trim(),
       document.getElementById("landRegPass").value,
-      document.getElementById("landRegConfirmPass").value,
+      null, // confirmPass removed from UI
       e.target
     );
   });
@@ -864,6 +961,9 @@ if(document.getElementById("landingRegisterForm")) {
 function openEditProfile() { 
   const user = JSON.parse(localStorage.getItem("ecostay_user")); 
   if(user) { 
+    const modal = document.getElementById('editProfileModal');
+    if (!modal) return;
+    
     document.getElementById("editName").value = user.name; 
     document.getElementById("editEmail").value = user.email; 
     document.getElementById("editProfilePreview").src = getSafeAvatar(user); 
@@ -872,7 +972,9 @@ function openEditProfile() {
 }
 
 let compressedAvatarData = null;
-document.getElementById("editProfileImg").addEventListener("change", function() {
+const editImgInput = document.getElementById("editProfileImg");
+if (editImgInput) {
+  editImgInput.addEventListener("change", function() {
     if (this.files && this.files[0]) {
         if (!this.files[0].type.match('image.*')) { showToast("Select an image file.", "error"); return; }
         showToast("Processing image...", "success");
@@ -881,20 +983,59 @@ document.getElementById("editProfileImg").addEventListener("change", function() 
             document.getElementById("editProfilePreview").src = base64;
         }).catch(() => showToast("Error processing image.", "error"));
     }
-});
+  });
+}
 
-document.getElementById("editProfileForm").addEventListener("submit", (e) => { 
-  e.preventDefault(); 
-  const name = document.getElementById("editName").value; 
-  const email = document.getElementById("editEmail").value;
-  const user = JSON.parse(localStorage.getItem("ecostay_user"));
-  const finalAvatar = compressedAvatarData || user.avatar; 
+const editProfileForm = document.getElementById("editProfileForm");
+if (editProfileForm) {
+  editProfileForm.addEventListener("submit", async (e) => { 
+    e.preventDefault(); 
+    const name = document.getElementById("editName").value; 
+    const email = document.getElementById("editEmail").value.trim().toLowerCase();
+    const user = JSON.parse(localStorage.getItem("ecostay_user"));
+    const finalAvatar = compressedAvatarData || user.avatar; 
 
-  try {
-      localStorage.setItem("ecostay_user", JSON.stringify({ name, email, avatar: finalAvatar })); 
-      checkLogin(); closeModal('editProfileModal'); showToast("Profile Updated!"); 
-  } catch (err) { showToast("Storage full! Try a smaller photo.", "error"); }
-});
+    const oldEmail = user.email;
+
+    // 1. Immediate Local Update (UI responsiveness)
+    const updatedUser = { 
+        name, 
+        email, 
+        avatar: finalAvatar, 
+        is_member: user.is_member || false 
+    };
+    
+    localStorage.setItem("ecostay_user", JSON.stringify(updatedUser));
+
+    // Update ecostay_users array
+    const localUsers = JSON.parse(localStorage.getItem('ecostay_users') || '[]');
+    const uIdx = localUsers.findIndex(u => u.email === oldEmail);
+    if (uIdx !== -1) {
+        localUsers[uIdx].name = name;
+        localUsers[uIdx].email = email;
+        localUsers[uIdx].avatar = finalAvatar;
+        localStorage.setItem('ecostay_users', JSON.stringify(localUsers));
+    }
+
+    checkLogin();
+    closeModal('editProfileModal');
+    showToast("Profile Updated!");
+
+    // 2. Background Firestore Sync
+    try {
+        const fs = await getFirestoreHelpers();
+        const docRef = fs.doc(fs.db, 'users', email);
+        await fs.setDoc(docRef, {
+            name,
+            email,
+            avatar: finalAvatar
+        }, { merge: true });
+        console.log("Firestore sync successful");
+    } catch (err) {
+        console.warn("Firestore sync failed, but local update persistent:", err);
+    }
+  });
+}
 
 // --- NEW: FIREBASE (Modular v10+) helper: dynamic import and single initialisation ---
 // This function dynamically imports the modular Firebase SDK (v10+) and returns
@@ -1117,13 +1258,14 @@ document.getElementById('joinClubForm').addEventListener('submit', async (e) => 
   // Send welcome email via EmailJS with variables fullName and email
   try {
     // --- EmailJS: send welcome email ---
-    // Important: set from_email to our club address and to_email to the user's submitted email.
-    // These template variables must match the variables configured in your EmailJS template.
     await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
       from_name: 'EcoStay Club',
       to_name: fullName,
       to_email: email,
+      reply_to: email,
       fullName: fullName,
+      user_name: fullName,
+      name: fullName,
       user_email: email,
       email: email,
       message: 'Welcome to EcoStay Club! We are thrilled to have you as a Guardian of Nature.',
@@ -1226,6 +1368,73 @@ function toggleSectionVisibility(id, isVisible) {
 checkLogin();
 if(localStorage.getItem('theme') === 'dark') document.body.setAttribute('data-theme', 'dark');
 
+/* --- 6. CHATBOT FUNCTIONS --- */
+function toggleChatbot() {
+    const chatbot = document.getElementById('chatbot-container');
+    const button = document.getElementById('chatbot-button');
+    if (!chatbot || !button) return;
+    if (chatbot.classList.contains('active')) {
+        chatbot.classList.remove('active');
+        button.classList.remove('active');
+    } else {
+        chatbot.classList.add('active');
+        button.classList.add('active');
+    }
+}
+
+function addMessage(message, isBot = false) {
+    const messages = document.getElementById('chatbot-messages');
+    if (!messages) return;
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chatbot-message ${isBot ? 'bot' : 'user'}`;
+    messageDiv.innerHTML = `<p>${message}</p>`;
+    messages.appendChild(messageDiv);
+    messages.scrollTop = messages.scrollHeight;
+}
+
+function handleChatbotInput(event) {
+    if (event.key === 'Enter') {
+        sendChatbotMessage();
+    }
+}
+
+function sendChatbotMessage() {
+    const input = document.getElementById('chatbot-input');
+    if (!input) return;
+    const message = input.value.trim().toLowerCase();
+    
+    if (message) {
+        addMessage(message, false);
+        input.value = '';
+        
+        setTimeout(() => {
+            let response = "";
+            if (message.includes('event') || message.includes('activit') || message.includes('project')) {
+                response = "We have many upcoming activities! Check out our 'Our Activities' section to see our reforestation projects and workshops like the Campus Forest Initiative.";
+            } else if (message.includes('join') || message.includes('member') || message.includes('register')) {
+                response = "You can join EcoStay Club by registering an account and then clicking the 'Join EcoStay Club' button on your dashboard. We're always looking for new Guardians!";
+            } else if (message.includes('donat') || message.includes('support') || message.includes('money') || message.includes('pay')) {
+                response = "Thank you for wanting to support us! You can donate via Mobile Money in the 'Support Our Impact' section. Every contribution helps us plant more trees.";
+            } else if (message.includes('mission') || message.includes('vision') || message.includes('goal')) {
+                response = "Our mission is to cultivate Green Havens across university campuses and empower students to build climate resilience through hands-on conservation.";
+            } else if (message.includes('team') || message.includes('founder') || message.includes('who')) {
+                response = "EcoStay was founded by Niyigaba Heritier. Our team includes passionate students like Rebecca (President), Jean Dedier (Coordinator), and many others dedicated to climate action.";
+            } else if (message.includes('contact') || message.includes('location') || message.includes('address') || message.includes('email') || message.includes('phone')) {
+                response = "You can contact us at info@ecostay.rw or call +250 784 095 661. We are based at the University of Rwanda.";
+            } else if (message.includes('tree') || message.includes('impact') || message.includes('co2') || message.includes('planted')) {
+                response = "So far, we've planted over 1,240 trees and sequestered approximately 31,000kg of CO2! Check our Impact section for real-time stats.";
+            } else if (message.includes('hi') || message.includes('hello') || message.includes('hey')) {
+                response = "Hello! I'm the EcoStay assistant. You can ask me about our mission, events, team, or how you can get involved!";
+            } else if (message.includes('thank')) {
+                response = "You're welcome! Feel free to ask if you have any other questions. Let's green Rwanda together!";
+            } else {
+                response = "I'm not sure I understand that. Try asking about our 'events', 'how to join', 'our mission', or 'how to donate'.";
+            }
+            addMessage(response, true);
+        }, 600);
+    }
+}
+
 // EXPOSE FUNCTIONS TO GLOBAL SCOPE FOR ONCLICK HANDLERS
 window.switchTab = switchTab;
 window.setLanguage = setLanguage;
@@ -1236,3 +1445,11 @@ window.togglePasswordVisibility = togglePasswordVisibility;
 window.toggleMobileMenu = toggleMobileMenu;
 window.closeMobileMenu = closeMobileMenu;
 window.logout = logout;
+window.openEditProfile = openEditProfile;
+window.openReportModal = openReportModal;
+window.openEventRegModal = openEventRegModal;
+window.selectAmount = selectAmount;
+window.payMomo = payMomo;
+window.handleChatbotInput = handleChatbotInput;
+window.sendChatbotMessage = sendChatbotMessage;
+window.toggleChatbot = toggleChatbot;

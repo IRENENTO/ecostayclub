@@ -55,7 +55,7 @@ const defaultSiteConfig = {
     visible: true,
     backgroundImage: "linear-gradient(135deg, rgba(26, 77, 46, 0.85) 0%, rgba(79, 111, 82, 0.85) 100%)",
     headline: "EcoStay Student for Climate Action",
-    subheading: "Join Rwanda's student movement for climate resilience and campus reforestation.",
+    subheading: "Join Rwanda's student movement to build climate resilience and create Green Havens through campus reforestation.",
     ctaButtonText: "Join Our Movement",
     ctaButtonLink: "#events",
     ctaButtonVisible: true
@@ -64,8 +64,8 @@ const defaultSiteConfig = {
     visible: true,
     title: "Our Mission & Vision",
     subtitle: "Driving Sustainable Change from the Heart of Rwanda",
-    missionText: "To transform university campuses into green havens through student-led planting and conservation.",
-    visionText: "A Rwanda where every student is a guardian of biodiversity.",
+    missionText: "To cultivate Green Havens across university campuses, empowering students to build climate resilience through hands-on conservation and indigenous reforestation.",
+    visionText: "A Rwanda where every student leads the creation of Green Havens, fostering a culture of climate resilience and environmental stewardship.",
     whoWeAre: "We are a diverse group of students, faculty, and environmental activists from the University of Rwanda, united by a single goal: protecting our planet for future generations through innovation and community action."
   },
   impact: {
