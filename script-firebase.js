@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, getDoc, setDoc, collection } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, setDoc, collection, onSnapshot } from 'firebase/firestore';
 
 // ===== FIREBASE CONFIGURATION =====
 const firebaseConfig = {
@@ -132,21 +132,36 @@ async function initializeSiteConfig() {
   try {
     if (firebaseReady) {
       const docRef = doc(db, 'siteConfig', 'main');
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        localStorage.setItem('siteConfig', JSON.stringify(docSnap.data()));
-        console.log("✓ Config loaded from Firebase");
+      
+      // Real-time listener for automatic updates
+      onSnapshot(docRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const config = docSnap.data();
+          localStorage.setItem('siteConfig', JSON.stringify(config));
+          console.log("✓ Site config synced from Firestore (Real-time)");
+          
+          // Re-render website sections if on main page
+          if (typeof renderWebsite === 'function') renderWebsite();
+          
+          // Trigger custom event for other scripts (like script.js) to respond
+          window.dispatchEvent(new CustomEvent('siteConfigUpdated', { detail: config }));
+        }
+      });
+
+      // Initial fetch to ensure we have data immediately
+      const initialSnap = await getDoc(docRef);
+      if (initialSnap.exists()) {
+        localStorage.setItem('siteConfig', JSON.stringify(initialSnap.data()));
         return;
       }
     }
   } catch (error) {
-    console.warn("⚠ Error loading from Firebase:", error.message);
+    console.warn("⚠ Error in Firestore sync:", error.message);
   }
   
   if (!localStorage.getItem('siteConfig')) {
     localStorage.setItem('siteConfig', JSON.stringify(defaultSiteConfig));
   }
-  console.log("✓ Using LocalStorage config");
 }
 
 function getSiteConfig() {

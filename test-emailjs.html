@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoStay - EmailJS Test</title>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #2d5a27 0%, #1a3314 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 20px;
+    }
+    .test-container {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      width: 100%;
+    }
+    h1 {
+      color: #2d5a27;
+      margin-top: 0;
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 500;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #2d5a27;
+      background-color: #f0fdf4;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #2d5a27;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #1a3314;
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .status {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      display: none;
+      text-align: center;
+      font-weight: 500;
+    }
+    .status.success {
+      background: #dcfce7;
+      color: #166534;
+      border: 2px solid #22c55e;
+      display: block;
+    }
+    .status.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 2px solid #ef4444;
+      display: block;
+    }
+    .status.loading {
+      background: #dbeafe;
+      color: #1e40af;
+      border: 2px solid #3b82f6;
+      display: block;
+    }
+    .info-box {
+      background: #f0fdf4;
+      border-left: 4px solid #2d5a27;
+      padding: 12px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #166534;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <h1>📧 EcoStay EmailJS Test</h1>
+    
+    <div class="info-box">
+      <strong>ℹ️ Testing EmailJS Integration</strong><br>
+      Send a test welcome email to verify the email service is working correctly.
+    </div>
+
+    <form id="testForm">
+      <div class="form-group">
+        <label for="testName">Full Name *</label>
+        <input type="text" id="testName" value="EcoStay Tester" required>
+      </div>
+
+      <div class="form-group">
+        <label for="testEmail">Email Address *</label>
+        <input type="email" id="testEmail" value="blackoboy48@gmail.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="testWhatsapp">WhatsApp (Optional)</label>
+        <input type="text" id="testWhatsapp" value="+250787654321">
+      </div>
+
+      <div class="form-group">
+        <label for="testFaculty">Faculty (Optional)</label>
+        <input type="text" id="testFaculty" value="Test Faculty">
+      </div>
+
+      <button type="submit" id="sendBtn">Send Test Email 🚀</button>
+    </form>
+
+    <div id="status" class="status"></div>
+  </div>
+
+  <!-- EmailJS Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script>
+    // Initialize EmailJS
+    emailjs.init("NO2bFJR-pvSXk-KXs");
+
+    const EMAILJS_SERVICE_ID = "service_jjh15de";
+    const EMAILJS_TEMPLATE_ID = "template_1a3m2xk";
+
+    document.getElementById('testForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const fullName = document.getElementById('testName').value.trim();
+      const email = document.getElementById('testEmail').value.trim();
+      const whatsapp = document.getElementById('testWhatsapp').value.trim();
+      const faculty = document.getElementById('testFaculty').value.trim();
+      const statusEl = document.getElementById('status');
+      const sendBtn = document.getElementById('sendBtn');
+
+      // Validate
+      if (!fullName || !email) {
+        statusEl.className = 'status error';
+        statusEl.textContent = '❌ Please fill in all required fields (Name & Email)';
+        return;
+      }
+
+      try {
+        // Show loading state
+        statusEl.className = 'status loading';
+        statusEl.textContent = '⏳ Sending test email...';
+        sendBtn.disabled = true;
+
+        // Prepare template parameters with multiple variations
+        const templateParams = {
+          to_email: email,           // Standard EmailJS variable
+          user_email: email,         // Alternative
+          email: email,              // Another variant
+          to_name: fullName,         // Standard
+          user_name: fullName,       // Alternative
+          fullName: fullName,        // Full name
+          whatsapp: whatsapp || 'Not provided',
+          faculty: faculty || 'Not specified',
+          year: '2026',
+          interests: 'EmailJS Integration Test',
+          message: '✅ This is a TEST email. EmailJS is working correctly! Welcome to EcoStay Club!'
+        };
+
+        console.log('📧 Sending email...');
+        console.log('Service ID:', EMAILJS_SERVICE_ID);
+        console.log('Template ID:', EMAILJS_TEMPLATE_ID);
+        console.log('Parameters:', templateParams);
+
+        // Send email
+        const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+        
+        console.log('✅ Email sent successfully!', response);
+
+        // Show success
+        statusEl.className = 'status success';
+        statusEl.textContent = `✅ Success! Test email sent to ${email}. Check your inbox! 📬`;
+        
+        // Reset form
+        document.getElementById('testForm').reset();
+        document.getElementById('testEmail').value = 'blackoboy48@gmail.com';
+        
+      } catch (error) {
+        console.error('❌ EmailJS Error:', error);
+        
+        let errorMsg = error.text || error.message || 'Unknown error';
+        statusEl.className = 'status error';
+        statusEl.textContent = `❌ Email failed: ${errorMsg}`;
+        
+      } finally {
+        sendBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

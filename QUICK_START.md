@@ -1,249 +1,199 @@
-# 🌱 EcoStay Club - Quick Start Guide
+# Quick Start Guide - EcoStay Club
 
-## ⚡ Get Running in 5 Minutes
+## 🚀 Getting Started
 
-### Step 1: Clone & Install
-```bash
-cd c:/my-projects/club
-npm install
-```
+### Option 1: Open Directly in Browser
+1. Navigate to your project folder: `c:\my-projects\club`
+2. Double-click `index.html` to open in your default browser
+3. You'll see the login landing page
 
-### Step 2: Initialize Database
-```bash
-node init-db.js
-```
+### Option 2: Use Live Server (Recommended)
+1. Open the project in VS Code
+2. Right-click on `index.html`
+3. Select "Open with Live Server"
+4. Your browser will open automatically
 
-### Step 3: Start Development (Windows)
-```bash
-# Option A: Run setup script (easiest)
-setup.bat
+## 🔐 Test Login
 
-# Or manually:
-npm run dev:full
-```
+### Quick Test (Landing Page)
+1. On the landing page, you'll see the login form
+2. Use these credentials:
+   - **Email:** `user@ecostay.rw`
+   - **Password:** `user1234`
+3. Click "Login"
+4. You'll be redirected to the main site with your dashboard visible
 
-### Step 4: Open in Browser
-- **Frontend**: http://localhost:3000
-- **Dashboard**: http://localhost:5000/dashboard.html
-- **API**: http://localhost:5000/api
-
----
-
-## 🔐 Default Login
-
-**Admin Dashboard:**
-- Email: `admin@ecostay.org`
-- Password: `Admin123`
-
----
+### Create New Account
+1. Click the "Register" tab on the landing page
+2. Fill in:
+   - Full Name: Your Name
+   - Email: your@email.com
+   - Password: (minimum 8 characters)
+3. Click "Create Account"
+4. You'll be logged in automatically
 
 ## 📊 Dashboard Features
 
-### Overview Tab
-- Real-time statistics with 4 key metrics
-- Activity trend chart (6 months)
-- Growth distribution pie chart
+After logging in, you'll see:
 
-### Members Tab
-- View all members
-- Add new members
-- Edit member details
-- Delete members
-- Export member list
+### 1. Profile Card
+- Your avatar
+- Name and email
+- Member statistics
 
-### Events Tab
-- Create new events
-- View event list with attendees
-- Edit event details
-- Delete events
+### 2. Membership Status
+- Current membership level
+- Member ID
+- Join button (if not a member yet)
 
-### Posts Tab
-- View community feed
-- Create new posts
-- Delete posts
-- Like and comment tracking
+### 3. Quick Actions
+- Register for Events
+- Support Projects
+- Get Help (Chatbot)
 
-### Statistics Tab
-- Monthly growth chart
-- Member distribution chart
-- Advanced analytics
+### 4. Recent Activity
+- Your recent actions
+- Upcoming events
 
-### Settings Tab
-- Configure organization name
-- Change primary color
-- Email notification settings
+### 5. Impact Statistics
+- Trees Planted
+- CO2 Sequestered
+- Active Members
+- Progress bars showing goals
 
----
+## 🎯 What to Test
 
-## 🔌 API Usage Examples
+### ✅ Login Flow
+- [ ] Login with test credentials
+- [ ] Dashboard appears automatically
+- [ ] User info displays correctly
+- [ ] Avatar loads properly
 
-### 1. Register a New User
-```bash
-curl -X POST http://localhost:5000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "John Doe",
-    "email": "john@example.com",
-    "password": "SecurePass123"
-  }'
-```
+### ✅ Navigation
+- [ ] Scroll through the dashboard
+- [ ] Click on "Events" in navbar
+- [ ] Try "Quick Actions" buttons
+- [ ] Test mobile menu (resize browser)
 
-### 2. Login
-```bash
-curl -X POST http://localhost:5000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "john@example.com",
-    "password": "SecurePass123"
-  }'
-```
+### ✅ User Actions
+- [ ] Edit profile (click user dropdown → Edit Profile)
+- [ ] Join club (if not a member)
+- [ ] Register for events
+- [ ] Use chatbot
 
-### 3. Create Event
-```bash
-curl -X POST http://localhost:5000/api/events \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <token>" \
-  -d '{
-    "title": "Tree Planting Campaign",
-    "date": "2026-03-01T10:00:00",
-    "location": "Campus Grounds",
-    "description": "Plant 500 trees"
-  }'
-```
+### ✅ Logout
+- [ ] Click user dropdown → Logout
+- [ ] Confirm you're back to landing page
+- [ ] Try logging in again
 
-### 4. Get All Events
-```bash
-curl http://localhost:5000/api/events
-```
+## 🔧 Admin Access
 
-### 5. Get Statistics
-```bash
-curl http://localhost:5000/api/stats
-```
+### Admin Dashboard
+1. Login with:
+   - **Email:** `admin@ecostay.org`
+   - **Password:** `admin123`
+2. You'll be redirected to `admin.html`
+3. Full admin panel with:
+   - Member management
+   - User management
+   - Event management
+   - Analytics
 
----
-
-## 📁 Important Files
-
-| File | Purpose |
-|------|---------|
-| `server.js` | Express backend server |
-| `api-integration.js` | Frontend API client |
-| `dashboard.html` | Admin dashboard |
-| `index.html` | Main landing page |
-| `.env` | Environment configuration |
-| `db.json` | Local database |
-| `init-db.js` | Database initialization |
-
----
-
-## 🛠️ Common Tasks
-
-### Add a New Member via Dashboard
-1. Open http://localhost:5000/dashboard.html
-2. Go to Members tab
-3. Click "Add Member" button
-4. Fill in the form
-5. Click Save
-
-### Create a New Event via API
-```javascript
-const response = await fetch('http://localhost:5000/api/events', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + token
-  },
-  body: JSON.stringify({
-    title: 'Event Name',
-    date: '2026-03-01T10:00:00',
-    location: 'Location',
-    description: 'Event description'
-  })
-});
-const event = await response.json();
-```
-
-### Get Dashboard Data
-```javascript
-const dashboardData = await fetch('http://localhost:5000/api/admin/dashboard')
-  .then(r => r.json());
-```
-
----
-
-## 🚀 Deployment Checklist
-
-Before deploying to production:
-
-- [ ] Set strong `JWT_SECRET` in `.env`
-- [ ] Change all default passwords
-- [ ] Enable HTTPS
-- [ ] Configure database (MongoDB/PostgreSQL)
-- [ ] Update CORS origins
-- [ ] Set up email notifications
-- [ ] Configure Firebase keys
-- [ ] Test all API endpoints
-- [ ] Run security audit
-- [ ] Set up monitoring
-
----
-
-## 📚 Documentation Files
-
-- **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** - Full deployment instructions
-- **[API_DOCS.md](./API_DOCS.md)** - Complete API reference
-- **[ROADMAP.md](./ROADMAP.md)** - Feature roadmap
-- **[FIREBASE_INTEGRATION.md](./FIREBASE_INTEGRATION.md)** - Firebase setup
-
----
+### Admin on Main Site
+1. Login with:
+   - **Email:** `admin@ecostay.rw`
+   - **Password:** `admin123`
+2. Stay on main site with admin privileges
+3. Access to all features
 
 ## 🐛 Troubleshooting
 
-### Port Already in Use
-```bash
-# Windows
-netstat -ano | findstr :5000
-taskkill /PID <PID> /F
+### Dashboard Not Showing?
+1. Open browser console (F12)
+2. Check for errors
+3. Clear localStorage: `localStorage.clear()`
+4. Refresh page and login again
 
-# Mac/Linux
-lsof -ti:5000 | xargs kill -9
-```
+### Stuck on Landing Page?
+1. Make sure you're using correct credentials
+2. Check browser console for errors
+3. Try a different browser
+4. Clear cache and cookies
 
-### Dependencies Not Installed
-```bash
-rm -rf node_modules package-lock.json
-npm install
-```
+### Avatar Not Loading?
+- Default avatars are generated automatically
+- Check internet connection (uses external API)
+- Avatar will show initials if image fails
 
-### Database Issues
-```bash
-node init-db.js
-```
+## 📱 Mobile Testing
 
-### CORS Errors
-Make sure you're using the correct API URL in `api-integration.js`
+1. Open browser DevTools (F12)
+2. Click device toolbar icon (Ctrl+Shift+M)
+3. Select a mobile device
+4. Test all features on mobile view
+
+## 🎨 Features to Explore
+
+### 1. Language Switcher
+- Top right corner: EN | FR | RW
+- Changes all text on the site
+- Preference is saved
+
+### 2. Dark Mode
+- Click moon icon in navbar
+- Toggle between light/dark themes
+- Preference is saved
+
+### 3. Chatbot
+- Click chat button (bottom right)
+- Ask about events, joining, donations
+- Get instant responses
+
+### 4. Donate
+- Scroll to "Support Our Impact"
+- Select amount
+- Click "Pay with Mobile Money"
+- USSD code will open
+
+## 📈 Next Steps
+
+After testing:
+1. ✅ Verify all features work
+2. ✅ Test on different browsers
+3. ✅ Test on mobile devices
+4. ✅ Check admin dashboard
+5. ✅ Review analytics
+
+## 🆘 Need Help?
+
+### Common Issues:
+- **Login fails:** Check credentials match exactly
+- **Dashboard hidden:** Clear localStorage and retry
+- **Slow loading:** Check internet connection
+- **Errors in console:** Check browser compatibility
+
+### Contact:
+- Check `LOGIN_DASHBOARD_FIXES.md` for technical details
+- Review code comments in `script.js`
+- Test with different browsers
 
 ---
 
-## 📞 Support & Community
+## ✨ Success Checklist
 
-- **Email**: support@ecostay.org
-- **GitHub Issues**: Report bugs and request features
-- **Documentation**: See additional markdown files in project root
+- [ ] Can login successfully
+- [ ] Dashboard appears after login
+- [ ] User info displays correctly
+- [ ] Can navigate all sections
+- [ ] Can edit profile
+- [ ] Can logout and login again
+- [ ] Mobile view works
+- [ ] Dark mode works
+- [ ] Language switcher works
+- [ ] Chatbot responds
 
----
-
-## 🎯 Next Steps
-
-1. ✅ Understand the project structure
-2. ✅ Get the server running
-3. ✅ Login to the dashboard
-4. ✅ Create test events and members
-5. ✅ Explore the API endpoints
-6. ✅ Review deployment guides
-7. ✅ Deploy to production
+**If all checked, your system is working perfectly! 🎉**
 
 ---
-
-**Happy coding! 🌱**
+**Version:** 2.0
+**Last Updated:** February 2026

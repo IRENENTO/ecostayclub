@@ -3,150 +3,282 @@
  * Handles all communication between frontend and backend
  */
 
-const API_BASE_URL = window.location.origin + '/api';
+import { initializeApp } from 'firebase/app';
+import {
+  getFirestore,
+  collection,
+  doc,
+  getDocs,
+  getDoc,
+  setDoc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  orderBy,
+  limit
+} from 'firebase/firestore';
+
+// ===== FIREBASE CONFIGURATION =====
+const firebaseConfig = {
+  apiKey: "AIzaSyDvSCCsd7O6Vx98blakHXBG8ettLBKHuZE",
+  authDomain: "ecostayclub.firebaseapp.com",
+  projectId: "ecostayclub",
+  storageBucket: "ecostayclub.firebasestorage.app",
+  messagingSenderId: "526186667158",
+  appId: "1:526186667158:web:064f152db79ec24983f6b7",
+  measurementId: "G-45R2WPSCZH"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 // ====== UTILITY FUNCTIONS ======
 export async function apiCall(endpoint, method = 'GET', data = null) {
-  try {
-    const options = {
-      method,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-      }
-    };
+  // Legacy API call - replaced by Firestore but kept for compatibility
+  console.warn(`Legacy API call to ${endpoint} intercepted. Use Firestore helpers instead.`);
+  return { error: "Legacy API disabled" };
+}
 
-    if (data) {
-      options.body = JSON.stringify(data);
-    }
-
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.error || 'API request failed');
-    }
-
-    return result;
-  } catch (error) {
-    console.error('API Error:', error);
-    showToast(error.message, 'error');
-    throw error;
+// Function to ensure local data exists (Fallback for offline/demo mode)
+function ensureLocalData() {
+  const users = JSON.parse(localStorage.getItem('ecostay_users') || '[]');
+  if (users.length === 0) {
+    console.log("Initializing local demo users...");
+    const demoUsers = [
+      { id: 1, name: "Demo User", email: "user@ecostay.rw", password: "user1234", avatar: "https://i.pravatar.cc/150?img=1", is_member: true, createdAt: new Date().toISOString() },
+      { id: 2, name: "Test Member", email: "test@ecostay.rw", password: "test1234", avatar: "https://i.pravatar.cc/150?img=2", is_member: true, joinedAt: new Date().toISOString(), createdAt: new Date().toISOString() },
+      { id: 3, name: "Club Admin", email: "admin@ecostay.rw", password: "admin123", avatar: "https://i.pravatar.cc/150?img=3", is_member: true, createdAt: new Date().toISOString() }
+    ];
+    localStorage.setItem('ecostay_users', JSON.stringify(demoUsers));
   }
 }
+// Run immediately
+if (typeof window !== 'undefined') { ensureLocalData(); }
 
 // ====== AUTHENTICATION API ======
 export const authAPI = {
   register: async (name, email, password) => {
-    return apiCall('/auth/register', 'POST', { name, email, password });
+    const userRef = doc(db, 'users', email);
+    const newUser = {
+      name,
+      email,
+      password, // Note: In production use Firebase Auth
+      createdAt: new Date().toISOString()
+    };
+    await setDoc(userRef, newUser);
+    return { success: true };
   },
 
   login: async (email, password) => {
-    const result = await apiCall('/auth/login', 'POST', { email, password });
-    if (result.token) {
-      localStorage.setItem('authToken', result.token);
-      localStorage.setItem('currentUser', JSON.stringify(result.user));
+    const userRef = doc(db, 'users', email);
+    const snap = await getDoc(userRef);
+    if (snap.exists() && snap.data().password === password) {
+      const user = snap.data();
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      localStorage.setItem('ecostay_user', JSON.stringify(user));
+      return { success: true, user };
     }
-    return result;
+    throw new Error("Invalid credentials");
   },
 
   logout: () => {
-    localStorage.removeItem('authToken');
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('authToken');
   }
 };
 
-// ====== MEMBERS API ======
+// ====== MEMBERS API (Club Joiners) ======
 export const membersAPI = {
-  getAll: () => apiCall('/members', 'GET'),
-  
-  getById: (id) => apiCall(`/members/${id}`, 'GET'),
-  
-  create: (data) => apiCall('/members', 'POST', data),
-  
-  update: (id, data) => apiCall(`/members/${id}`, 'PUT', data),
-  
-  delete: (id) => apiCall(`/members/${id}`, 'DELETE')
+  getAll: async () => {
+    let members = [];
+    try {
+      const q = query(collection(db, 'members'), orderBy('joinedAt', 'desc'));
+      const snap = await getDocs(q);
+      members = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (e) {
+      console.warn("Firestore members fetch failed, falling back to local:", e);
+    }
+
+    // Fallback/Merge with LocalStorage
+    const localUsers = JSON.parse(localStorage.getItem('ecostay_users') || '[]');
+    const localMembers = localUsers.filter(u => u.is_member).map(u => ({
+      id: 'local_' + u.id,
+      ...u,
+      joinedAt: u.joinedAt || new Date().toISOString(),
+      status: u.status || 'Pending'
+    }));
+
+    // Combine unique by email (prefer Firestore)
+    const combined = [...members];
+    localMembers.forEach(lm => {
+      if (!combined.find(c => c.email === lm.email)) {
+        combined.push(lm);
+      }
+    });
+
+    return combined;
+  },
+
+  create: async (data) => {
+    await addDoc(collection(db, 'members'), {
+      ...data,
+      joinedAt: new Date().toISOString(),
+      status: 'Pending'
+    });
+  },
+
+  update: async (id, data) => {
+    // Try Firestore
+    try {
+      if (!id.startsWith('local_')) {
+        const docRef = doc(db, 'members', id);
+        await updateDoc(docRef, data);
+      }
+    } catch (e) { }
+
+    // Update Local
+    const localUsers = JSON.parse(localStorage.getItem('ecostay_users') || '[]');
+    const idx = localUsers.findIndex(u => ('local_' + u.id) === id || u.firestoreId === id);
+    if (idx !== -1) {
+      localUsers[idx] = { ...localUsers[idx], ...data };
+      localStorage.setItem('ecostay_users', JSON.stringify(localUsers));
+    }
+  },
+
+  delete: async (id) => {
+    try {
+      if (!id.startsWith('local_')) {
+        await deleteDoc(doc(db, 'members', id));
+      }
+    } catch (e) { }
+
+    // Update Local
+    const localUsers = JSON.parse(localStorage.getItem('ecostay_users') || '[]');
+    const newLocalUsers = localUsers.filter(u => ('local_' + u.id) !== id);
+    localStorage.setItem('ecostay_users', JSON.stringify(newLocalUsers));
+  }
+};
+
+// ====== USERS API (Registered Users) ======
+export const usersAPI = {
+  getAll: async () => {
+    let users = [];
+    try {
+      const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'));
+      const snap = await getDocs(q);
+      users = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (e) {
+      console.warn("Firestore users fetch failed, falling back to local:", e);
+    }
+
+    // Fallback/Merge with LocalStorage
+    const localUsers = JSON.parse(localStorage.getItem('ecostay_users') || '[]');
+    const mappedLocal = localUsers.map(u => ({
+      id: 'local_' + u.id,
+      ...u,
+      createdAt: u.createdAt || new Date().toISOString()
+    }));
+
+    // Combine unique by email
+    const combined = [...users];
+    mappedLocal.forEach(lm => {
+      if (!combined.find(c => c.email === lm.email)) {
+        combined.push(lm);
+      }
+    });
+
+    return combined;
+  },
+
+  delete: async (id) => {
+    try {
+      if (!id.startsWith('local_')) {
+        await deleteDoc(doc(db, 'users', id));
+      }
+    } catch (e) { }
+
+    // Update Local
+    const localUsers = JSON.parse(localStorage.getItem('ecostay_users') || '[]');
+    const newLocalUsers = localUsers.filter(u => ('local_' + u.id) !== id);
+    localStorage.setItem('ecostay_users', JSON.stringify(newLocalUsers));
+  }
 };
 
 // ====== EVENTS API ======
 export const eventsAPI = {
-  getAll: () => apiCall('/events', 'GET'),
-  
-  getById: (id) => apiCall(`/events/${id}`, 'GET'),
-  
-  create: (data) => apiCall('/events', 'POST', data),
-  
-  update: (id, data) => apiCall(`/events/${id}`, 'PUT', data),
-  
-  delete: (id) => apiCall(`/events/${id}`, 'DELETE')
+  getAll: async () => {
+    const q = query(collection(db, 'events'), orderBy('date', 'desc'));
+    const snap = await getDocs(q);
+    return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  },
+
+  create: async (data) => {
+    await addDoc(collection(db, 'events'), {
+      ...data,
+      createdAt: new Date().toISOString()
+    });
+  },
+
+  update: async (id, data) => {
+    await updateDoc(doc(db, 'events', id), data);
+  },
+
+  delete: async (id) => {
+    await deleteDoc(doc(db, 'events', id));
+  }
 };
 
-// ====== POSTS/FEED API ======
+// ====== POSTS API ======
 export const postsAPI = {
-  getAll: () => apiCall('/posts', 'GET'),
-  
-  create: (data) => apiCall('/posts', 'POST', data),
-  
-  delete: (id) => apiCall(`/posts/${id}`, 'DELETE')
+  getAll: async () => {
+    const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
+    const snap = await getDocs(q);
+    return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  },
+
+  create: async (data) => {
+    await addDoc(collection(db, 'posts'), {
+      ...data,
+      createdAt: new Date().toISOString(),
+      likes: 0,
+      comments: 0
+    });
+  },
+
+  delete: async (id) => {
+    await deleteDoc(doc(db, 'posts', id));
+  }
 };
 
-// ====== DASHBOARD/STATS API ======
+// ====== STATS API ======
 export const statsAPI = {
-  getStats: () => apiCall('/stats', 'GET'),
-  
-  updateStats: (type, value) => apiCall('/stats/update', 'POST', { type, value }),
-  
-  getDashboard: () => apiCall('/admin/dashboard', 'GET')
+  getStats: async () => {
+    const docSnap = await getDoc(doc(db, 'siteConfig', 'impact'));
+    if (docSnap.exists()) return docSnap.data();
+
+    // Fallback/Default
+    const membersSnap = await getDocs(collection(db, 'members'));
+    const eventsSnap = await getDocs(collection(db, 'events'));
+    return {
+      totalMembers: membersSnap.size,
+      eventCount: eventsSnap.size,
+      treesPlanted: 1240,
+      carbonReduced: 31000
+    };
+  }
 };
 
-// ====== NOTIFICATIONS API ======
-export const notificationsAPI = {
-  getAll: () => apiCall('/notifications', 'GET')
-};
-
-// ====== SEARCH API ======
-export const searchAPI = {
-  search: (query) => apiCall(`/search?q=${encodeURIComponent(query)}`, 'GET')
-};
-
-// ====== EXPORT API ======
-export const exportAPI = {
-  exportMembers: () => apiCall('/export/members', 'GET'),
-  
-  exportEvents: () => apiCall('/export/events', 'GET')
-};
-
-// ====== HELPER FUNCTIONS ======
-export function showToast(message, type = 'success') {
-  const toast = document.createElement('div');
-  toast.className = `toast toast-${type}`;
-  toast.textContent = message;
-  
-  const container = document.getElementById('toast-container') || document.body;
-  container.appendChild(toast);
-
-  setTimeout(() => {
-    toast.classList.add('show');
-  }, 10);
-
-  setTimeout(() => {
-    toast.remove();
-  }, 3000);
-}
-
-// Initialize API on page load
+// ====== EXPORT FUNCTIONS ======
 if (typeof window !== 'undefined') {
-  window.apiCall = apiCall;
   window.authAPI = authAPI;
   window.membersAPI = membersAPI;
+  window.usersAPI = usersAPI;
   window.eventsAPI = eventsAPI;
   window.postsAPI = postsAPI;
   window.statsAPI = statsAPI;
-  window.notificationsAPI = notificationsAPI;
-  window.searchAPI = searchAPI;
-  window.exportAPI = exportAPI;
-  window.showToast = showToast;
+  window.db = db; // Expose db for direct queries if needed
 }
 
 document.addEventListener('DOMContentLoaded', () => {
